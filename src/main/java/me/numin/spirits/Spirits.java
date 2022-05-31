@@ -13,8 +13,9 @@ import me.numin.spirits.command.SpiritsCommand;
 import me.numin.spirits.config.Config;
 import me.numin.spirits.listeners.Abilities;
 import me.numin.spirits.listeners.Passives;
-import me.numin.spirits.listeners.PkEvent;
-import me.numin.spirits.utilities.SpiritElement;
+import me.numin.spirits.listeners.PKEvents;
+import me.numin.spirits.utilities.SpiritPlaceholder;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Spirits extends JavaPlugin {
@@ -28,12 +29,15 @@ public final class Spirits extends JavaPlugin {
         new Config(this);
         new SpiritsCommand();
         new ConfigCommand();
-        new SpiritElement();
 
         CoreAbility.registerPluginAbilities(plugin, "me.numin.spirits.ability");
 
         registerListeners();
         registerCollisions();
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new SpiritPlaceholder().register();
+        }
 
         plugin.getLogger().info("Successfully enabled Spirits.");
     }
@@ -61,6 +65,6 @@ public final class Spirits extends JavaPlugin {
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new Abilities(), this);
         getServer().getPluginManager().registerEvents(new Passives(), this);
-        getServer().getPluginManager().registerEvents(new PkEvent(), this);
+        getServer().getPluginManager().registerEvents(new PKEvents(), this);
     }
 }

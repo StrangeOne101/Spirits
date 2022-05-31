@@ -1,20 +1,17 @@
 name: Spirits
 version: ${project.version}
 main: me.numin.spirits.Spirits
-api-version: 1.18
-softdepend: [ProjectKorra]
+api-version: 1.15
+depend: [ProjectKorra]
+softdepend: [PlaceholderAPI]
 authors: [Numin]
 description: Enables your players to be Spirits.
 
 permissions:
-  bending.command.getconfig:
-    default: op
-    description: Allows someone to look at the config with a command.
-  bending.spirit:
-    default: true
-    description: Grants access to all Spirit abilities.
+  bending.neutralspirit:
+    default: false
+    description: Gives access to all neutral Spirit Abilities
     children:
-      bending.command.choose.spirit: true
       bending.ability.agility: true
       bending.ability.levitation: true
       bending.ability.phase: true
@@ -22,7 +19,7 @@ permissions:
       bending.ability.vanish: true
   bending.lightspirit:
     default: true
-    description: Grants access to all LightSpirit abilities.
+    description: Gives access to all LightSpirit abilities.
     children:
       bending.command.choose.lightspirit: true
       bending.ability.alleviate: true
@@ -30,12 +27,17 @@ permissions:
       bending.ability.rejuvenate: true
       bending.ability.shelter: true
       bending.ability.lightblast: true
+      bending.neutralspirit: true
   bending.darkspirit:
     default: true
-    description: Grants access to all DarkSpirit abilities.
+    description: Gives access to all DarkSpirit abilities.
     children:
       bending.command.choose.darkspirit: true
       bending.ability.infest: true
       bending.ability.intoxicate: true
       bending.ability.shackle: true
       bending.ability.strike: true
+      bending.neutralspirit: true
+  bending.spirit:
+    default: false
+    description: Do not grant this permission. This being false stops players from becoming ONLY a neutral spirit

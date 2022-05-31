@@ -1,5 +1,6 @@
 package me.numin.spirits.utilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.numin.spirits.Spirits;
@@ -281,5 +282,27 @@ public class Methods {
             break;
         }
         return titleColor + "" + ChatColor.BOLD + abilityType + ": " + descColor;
+    }
+
+    /**
+     * Checks if the player is the avatar. This is a hotfix so players with both
+     * a spirit element and a light/dark spirit element don't appear as the avatar
+     * because they "have more than one element"
+     * @param player The player to check
+     * @return True if they are the avatar
+     */
+    public static boolean isAvatar(BendingPlayer player) {
+        if (player.getPlayer().hasPermission("bending.avatar")) return true;
+        if (player.getElements().size() > 1) {
+            List<Element> clonedElements = new ArrayList<>(player.getElements());
+            clonedElements.remove(SpiritElement.SPIRIT);
+
+            //People with both shouldnt return true
+            if (clonedElements.size() == 2 && player.hasElement(SpiritElement.DARK_SPIRIT)
+                    && player.hasElement(SpiritElement.LIGHT_SPIRIT)) return false;
+
+            return clonedElements.size() > 1;
+        }
+        return false;
     }
 }

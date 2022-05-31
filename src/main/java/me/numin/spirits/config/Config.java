@@ -1,5 +1,6 @@
 package me.numin.spirits.config;
 
+import me.numin.spirits.utilities.SpiritElement;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.projectkorra.projectkorra.configuration.ConfigManager;
@@ -26,11 +27,11 @@ public class Config {
         FileConfiguration language = ConfigManager.languageConfig.get();
 
         //Rank configuration
-        language.addDefault("Chat.Colors.Spirit", "DARK_AQUA");
+        language.addDefault("Chat.Colors.Spirit", SpiritElement.SPIRIT.getDefaultColor());
         language.addDefault("Chat.Colors.SpiritSub", "DARK_PURPLE");
-        language.addDefault("Chat.Colors.LightSpirit", "AQUA");
+        language.addDefault("Chat.Colors.LightSpirit", SpiritElement.LIGHT_SPIRIT.getDefaultColor());
         language.addDefault("Chat.Colors.LightSpiritSub", "WHITE");
-        language.addDefault("Chat.Colors.DarkSpirit", "BLUE");
+        language.addDefault("Chat.Colors.DarkSpirit", SpiritElement.DARK_SPIRIT.getDefaultColor());
         language.addDefault("Chat.Colors.DarkSpiritSub", "DARK_GRAY");
         language.addDefault("Chat.Prefixes.Spirit", "[Spirit]");
         language.addDefault("Chat.Prefixes.LightSpirit", "[LightSpirit]");
@@ -84,6 +85,7 @@ public class Config {
 
         config.addDefault("Language.Abilities.DarkSpirit.Strike.Description", "The most basic ability of an aggressive, unbalanced Spirit is to rush towards their enemy and try to bite them in 1 swift motion. When you activate this ability, you'll see your target zone. If your target zone gets in range of another entity, you'll be rushed over to them an deal damage.");
         config.addDefault("Language.Abilities.DarkSpirit.Strike.Instructions", "Left-Click to trigger target spectacle");
+        config.addDefault("Language.Errors.ChooseSpirit", "You cannot choose the Spirit element on its own! Please select a Dark or Light Spirit instead!");
 
         //Ability configuration
         config.addDefault("Abilities.Spirits.Neutral.Agility.Enabled", true);

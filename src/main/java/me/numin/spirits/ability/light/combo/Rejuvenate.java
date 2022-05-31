@@ -120,7 +120,7 @@ public class Rejuvenate extends LightAbility implements AddonAbility, ComboAbili
             }
         }
 
-        ParticleEffect.ENCHANTMENT_TABLE.display(location, (float)(radius / 2), 0.4F, (float)(radius / 2), 0, 10);
+        ParticleEffect.ENCHANTMENT_TABLE.display(location, 10, (float)(radius / 2), 0.4F, (float)(radius / 2), 0);
     }
 
     private void grabEntities() {
