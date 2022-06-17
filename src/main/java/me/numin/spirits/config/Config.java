@@ -9,17 +9,11 @@ import me.numin.spirits.Spirits;
 
 public class Config {
 
-    private static ConfigFile main;
     private static Spirits plugin;
 
     public Config(Spirits plugin) {
         Config.plugin = plugin;
-        main = new ConfigFile("config");
         loadConfig();
-    }
-
-    public static FileConfiguration getConfig() {
-        return main.getConfig();
     }
 
     private void loadConfig() {

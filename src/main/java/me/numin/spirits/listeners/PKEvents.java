@@ -12,6 +12,7 @@ import me.numin.spirits.config.Config;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.SpiritElement;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -74,7 +75,8 @@ public class PKEvents implements Listener {
         } else if (event.getElement() == SpiritElement.SPIRIT && event.getResult() == Result.CHOOSE) {
             BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(event.getTarget());
             bPlayer.getElements().remove(SpiritElement.SPIRIT);
-            GeneralMethods.sendBrandingMessage(event.getTarget(), Config.getConfig().getString("Language.Errors.ChooseSpirit"));
+            String s = Spirits.getInstance().getConfig().getString("Language.Errors.ChooseSpirit");
+            if (!StringUtils.isEmpty(s)) GeneralMethods.sendBrandingMessage(event.getTarget(), s);
             GeneralMethods.saveElements(bPlayer);
         }
     }

@@ -6,7 +6,7 @@
 
     <groupId>me.numin</groupId>
     <artifactId>spirits</artifactId>
-    <version>1.1b</version>
+    <version>1.1c</version>
     <packaging>jar</packaging>
 
     <name>Spirits</name>
