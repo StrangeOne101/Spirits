@@ -3,9 +3,9 @@ package me.numin.spirits.ability.light.combo;
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.GeneralMethods;
-import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
@@ -13,7 +13,6 @@ import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.LightAbility;
-import me.numin.spirits.utilities.Removal;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -29,17 +28,23 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Rejuvenate extends LightAbility implements AddonAbility, ComboAbility {
+public class Rejuvenate extends LightAbility implements ComboAbility {
 
     //TODO: Add sounds.
 
     private Location circleCenter, location, location2, location3;
-    private Removal removal;
 
     private boolean damageDarkSpirits, damageMonsters;
-    private double damage, radius, t;
+    @Attribute(Attribute.DAMAGE)
+    private double damage;
+    @Attribute(Attribute.RADIUS)
+    private double radius;
+    private double counter;
     private int currPoint, effectInt;
-    private long cooldown, duration, time;
+    @Attribute(Attribute.COOLDOWN)
+    private long cooldown;
+    @Attribute(Attribute.DURATION)
+    private long duration;
 
     public Rejuvenate(Player player) {
         super(player);
@@ -48,7 +53,6 @@ public class Rejuvenate extends LightAbility implements AddonAbility, ComboAbili
             return;
         }
         setFields();
-        time = System.currentTimeMillis();
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 0.07F, 5);
         start();
         bPlayer.addCooldown(this);
@@ -66,20 +70,15 @@ public class Rejuvenate extends LightAbility implements AddonAbility, ComboAbili
         location2 = player.getLocation();
         location3 = player.getLocation();
         circleCenter = player.getLocation();
-        this.removal = new Removal(player);
     }
 
     @Override
     public void progress() {
-        if (removal.stop()) {
-            remove();
-            return;
-        }
         if (!bPlayer.canBendIgnoreBindsCooldowns(this)) {
             remove();
             return;
         }
-        if (System.currentTimeMillis() > time + duration) {
+        if (System.currentTimeMillis() > getStartTime() + duration) {
             remove();
             return;
         }
@@ -107,12 +106,12 @@ public class Rejuvenate extends LightAbility implements AddonAbility, ComboAbili
             ParticleEffect.END_ROD.display(location3, 0, 0, 0, 0, 1);
             location3.subtract(x2, 0, z2);
         }
-        t += Math.PI / 32;
-        if (!(t >= Math.PI * 4)) {
+        counter += Math.PI / 32;
+        if (!(counter >= Math.PI * 4)) {
             for (double i = 0; i <= Math.PI * 2; i += Math.PI / 1.2) {
-                double x = 0.5 * (Math.PI * 4 - t) * Math.cos(t - i);
-                double y = 0.4 * t;
-                double z = 0.5 * (Math.PI * 4 - t) * Math.sin(t - i);
+                double x = 0.5 * (Math.PI * 4 - counter) * Math.cos(counter - i);
+                double y = 0.4 * counter;
+                double z = 0.5 * (Math.PI * 4 - counter) * Math.sin(counter - i);
                 location.add(x, y, z);
                 Methods.playSpiritParticles(SpiritType.LIGHT, location, 0, 0, 0, 0, 1);
                 player.getWorld().spawnParticle(Particle.REDSTONE, location, 1, 0.1, 0.1, 0.1, 0, new DustOptions(Color.fromBGR(255, 255, 255), 1));
@@ -196,27 +195,6 @@ public class Rejuvenate extends LightAbility implements AddonAbility, ComboAbili
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(SpiritType.LIGHT) +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.Rejuvenate.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(SpiritType.LIGHT) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(SpiritType.LIGHT) + Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Enabled");
-    }
-
-    @Override
     public boolean isExplosiveAbility() {
         return false;
     }
@@ -235,9 +213,4 @@ public class Rejuvenate extends LightAbility implements AddonAbility, ComboAbili
     public boolean isSneakAbility() {
         return false;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

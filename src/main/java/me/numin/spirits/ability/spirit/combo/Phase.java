@@ -1,6 +1,5 @@
 package me.numin.spirits.ability.spirit.combo;
 
-import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
 import com.projectkorra.projectkorra.util.ClickType;
@@ -8,7 +7,6 @@ import com.projectkorra.projectkorra.util.ParticleEffect;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.Spirits;
-import me.numin.spirits.utilities.Removal;
 import me.numin.spirits.ability.api.SpiritAbility;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,7 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
-public class Phase extends SpiritAbility implements AddonAbility, ComboAbility {
+public class Phase extends SpiritAbility implements ComboAbility {
 
     //TODO: Implement config for new variables. Variables are already made, just need the config paths.
     //TODO: Feature where flying through entities while phased could give the target and/or spirit effects (shivers, etc)
@@ -25,7 +23,6 @@ public class Phase extends SpiritAbility implements AddonAbility, ComboAbility {
 
     private GameMode originGM;
     private Location origin;
-    private Removal removal;
 
     private boolean applyLevitationCD, applyVanishCD, isPhased, playEffects;
     private double multiplier, levitationMultiplier, vanishMultiplier;
@@ -61,14 +58,13 @@ public class Phase extends SpiritAbility implements AddonAbility, ComboAbility {
         this.originGM = player.getGameMode();
         this.isPhased = false;
         this.playEffects = true;
-        this.removal = new Removal(player);
     }
 
     @Override
     public void progress() {
         this.cooldown = (long) ((System.currentTimeMillis() - time) * multiplier);
 
-        if (removal.stop()) {
+        if (!bPlayer.canBendIgnoreBinds(this)) {
             remove();
             return;
         }
@@ -159,27 +155,6 @@ public class Phase extends SpiritAbility implements AddonAbility, ComboAbility {
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) +
-                Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Phase.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) + Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Combo.Phase.Enabled");
-    }
-
-    @Override
     public boolean isExplosiveAbility() {
         return false;
     }
@@ -198,9 +173,4 @@ public class Phase extends SpiritAbility implements AddonAbility, ComboAbility {
     public boolean isSneakAbility() {
         return false;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

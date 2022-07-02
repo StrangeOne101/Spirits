@@ -5,6 +5,7 @@ import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.PKListener;
 import com.projectkorra.projectkorra.configuration.ConfigManager;
+import com.projectkorra.projectkorra.event.BendingReloadEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent.Result;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import me.numin.spirits.Spirits;
@@ -14,6 +15,7 @@ import me.numin.spirits.utilities.SpiritElement;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +23,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.RegisteredListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -127,5 +131,16 @@ public class PKEvents implements Listener {
         format = format.replace("<message>", "%2$s");
         format = format.replace("<name>", c + player.getDisplayName() + ChatColor.RESET);
         event.setFormat(format);
+    }
+
+    @EventHandler
+    public void onPKReload(BendingReloadEvent event) {
+        try {
+            Spirits.plugin.getConfig().load(new File(Spirits.plugin.getDataFolder(), "config.yml"));
+            event.getSender().sendMessage(ChatColor.BLUE + "Reloaded Spirits!");
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+            event.getSender().sendMessage(ChatColor.RED + "Failed to load the Spirits config: " + e.getLocalizedMessage());
+        }
     }
 }

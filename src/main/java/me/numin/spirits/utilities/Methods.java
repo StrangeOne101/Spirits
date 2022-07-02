@@ -128,24 +128,6 @@ public class Methods {
     }
 
     /**
-     * Used to get the authors defined in the pom.xml file.
-     *
-     * @return List of authors.
-     */
-    public static List<String> getAuthor() {
-        return Spirits.plugin.getDescription().getAuthors();
-    }
-
-    /**
-     * Used to get the version of the project from the pom.xml file.
-     *
-     * @return The plugin version.
-     */
-    public static String getVersion() {
-        return Spirits.plugin.getDescription().getVersion();
-    }
-
-    /**
      * Gets the type of spirit a player may be.
      *
      * @param player The player being tested.
@@ -278,7 +260,7 @@ public class Methods {
             break;
             case LIGHT: descColor = ChatColor.WHITE;
             break;
-            case DARK: descColor = ChatColor.DARK_RED;
+            case DARK: descColor = ChatColor.BLUE;
             break;
         }
         return titleColor + "" + ChatColor.BOLD + abilityType + ": " + descColor;

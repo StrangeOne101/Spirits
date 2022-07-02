@@ -2,7 +2,7 @@ package me.numin.spirits.ability.dark;
 
 import java.util.Random;
 
-import me.numin.spirits.utilities.Removal;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -16,7 +16,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import com.projectkorra.projectkorra.GeneralMethods;
-import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.numin.spirits.Spirits;
@@ -24,7 +23,7 @@ import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.DarkAbility;
 
-public class Intoxicate extends DarkAbility implements AddonAbility {
+public class Intoxicate extends DarkAbility {
 
     //TODO: Make new sounds
 
@@ -32,15 +31,21 @@ public class Intoxicate extends DarkAbility implements AddonAbility {
     private DustOptions customColor;
     private LivingEntity target;
     private Location location;
-    private Removal removal;
     private Vector vector = new Vector(1, 0, 0);
 
     private boolean hasReached;
-    private double blastSpeed, range, selfDamage;
+    @Attribute(Attribute.SPEED)
+    private double blastSpeed;
+    @Attribute(Attribute.RANGE)
+    private double range;
+    @Attribute("SelfDamage")
+    private double selfDamage;
     private int currPoint;
     private int witherDuration, hungerDuration, confusionDuration;
     private int witherPower, hungerPower, confusionPower;
-    private long cooldown, harmInt, potInt, time;
+    @Attribute(Attribute.COOLDOWN)
+    private long cooldown;
+    private long harmInt, potInt;
 
     public Intoxicate(Player player) {
         super(player);
@@ -53,7 +58,6 @@ public class Intoxicate extends DarkAbility implements AddonAbility {
         Entity targetEntity = GeneralMethods.getTargetedEntity(player, range);
         if (targetEntity instanceof LivingEntity) {
             this.target = (LivingEntity) targetEntity;
-            time = System.currentTimeMillis();
             start();
         }
     }
@@ -78,19 +82,16 @@ public class Intoxicate extends DarkAbility implements AddonAbility {
         this.customColor = new DustOptions(Color.fromRGB(red, green, blue), 1);
 
         this.location = player.getLocation().clone().add(0, 1, 0);
-        this.removal = new Removal(player, true);
     }
 
     @Override
     public void progress() {
-        if (removal.stop() ||
-                !bPlayer.getBoundAbilityName().equals(getName()) ||
-                player.getLocation().distance(target.getLocation()) > range) {
+        if (!bPlayer.canBend(this) || !player.isSneaking()) {
             remove();
             return;
         }
 
-        if (player.isSneaking() && target != null) {
+        if (target != null) {
             if (!hasReached) showSelection();
             else doEffects();
         }
@@ -120,7 +121,7 @@ public class Intoxicate extends DarkAbility implements AddonAbility {
     private void doEffects() {
         showSpirals();
 
-        if (System.currentTimeMillis() - time > potInt) {
+        if (System.currentTimeMillis() - getStartTime() > potInt) {
             for (PotionEffect targetEffect : target.getActivePotionEffects()) {
                 if (isPositiveEffect(targetEffect.getType())) {
                     target.removePotionEffect(targetEffect.getType());
@@ -128,7 +129,7 @@ public class Intoxicate extends DarkAbility implements AddonAbility {
             }
         }
 
-        if (System.currentTimeMillis() - time > harmInt) {
+        if (System.currentTimeMillis() - getStartTime() > harmInt) {
             target.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 20 * witherDuration, witherPower, false, true, false));
             target.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 20 * hungerDuration, hungerPower, false, true, false));
             target.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * confusionDuration, confusionPower, false, true, false));
@@ -190,27 +191,6 @@ public class Intoxicate extends DarkAbility implements AddonAbility {
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(SpiritType.DARK) +
-                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.Intoxicate.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(SpiritType.DARK) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(SpiritType.DARK) + Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.DarkSpirit.Intoxicate.Enabled");
-    }
-
-    @Override
     public boolean isExplosiveAbility() {
         return false;
     }
@@ -229,9 +209,4 @@ public class Intoxicate extends DarkAbility implements AddonAbility {
     public boolean isSneakAbility() {
         return true;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

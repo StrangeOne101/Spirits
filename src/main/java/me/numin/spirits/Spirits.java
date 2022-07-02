@@ -3,13 +3,11 @@ package me.numin.spirits;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.CollisionInitializer;
-import me.numin.spirits.ability.dark.DarkBlast;
+import me.numin.spirits.ability.dark.OldDarkBlast;
 import me.numin.spirits.ability.dark.Shackle;
 import me.numin.spirits.ability.dark.Strike;
-import me.numin.spirits.ability.light.LightBlast;
+import me.numin.spirits.ability.light.OldLightBlast;
 import me.numin.spirits.ability.light.Shelter;
-import me.numin.spirits.command.configurations.ConfigCommand;
-import me.numin.spirits.command.SpiritsCommand;
 import me.numin.spirits.config.Config;
 import me.numin.spirits.listeners.Abilities;
 import me.numin.spirits.listeners.Passives;
@@ -27,8 +25,6 @@ public final class Spirits extends JavaPlugin {
         plugin = this;
 
         new Config(this);
-        new SpiritsCommand();
-        new ConfigCommand();
 
         CoreAbility.registerPluginAbilities(plugin, "me.numin.spirits.ability");
 
@@ -54,10 +50,10 @@ public final class Spirits extends JavaPlugin {
     //TODO: collision system needs testing
     private void registerCollisions() {
         CollisionInitializer collisionInitializer = ProjectKorra.getCollisionInitializer();
-        collisionInitializer.addSmallAbility(CoreAbility.getAbility(DarkBlast.class));
+        collisionInitializer.addSmallAbility(CoreAbility.getAbility(OldDarkBlast.class));
         collisionInitializer.addSmallAbility(CoreAbility.getAbility(Shackle.class));
         collisionInitializer.addSmallAbility(CoreAbility.getAbility(Strike.class));
-        collisionInitializer.addSmallAbility(CoreAbility.getAbility(LightBlast.class));
+        collisionInitializer.addSmallAbility(CoreAbility.getAbility(OldLightBlast.class));
         collisionInitializer.addLargeAbility(CoreAbility.getAbility(Shelter.class));
         collisionInitializer.initializeDefaultCollisions();
     }

@@ -3,8 +3,8 @@ package me.numin.spirits.ability.spirit;
 import java.util.Random;
 
 import com.projectkorra.projectkorra.ability.CoreAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import me.numin.spirits.ability.spirit.combo.Levitation;
-import me.numin.spirits.utilities.Removal;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -13,23 +13,30 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.projectkorra.projectkorra.GeneralMethods;
-import com.projectkorra.projectkorra.ability.AddonAbility;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.SpiritAbility;
 
-public class Vanish extends SpiritAbility implements AddonAbility {
+public class Vanish extends SpiritAbility {
 
     //TODO: Update sounds.
 
     private Location origin;
-    private Removal removal;
 
     private boolean applyInvis = true, isCharged, removeFire;
     private int particleFrequency;
-    private long chargeTime, cooldown, duration, radius, range, time;
+    @Attribute(Attribute.CHARGE_DURATION)
+    private long chargeTime;
+    @Attribute(Attribute.COOLDOWN)
+    private long cooldown;
+    @Attribute(Attribute.DURATION)
+    private long duration;
+    @Attribute(Attribute.RADIUS)
+    private double radius;
+    @Attribute(Attribute.RANGE)
+    private double range;
 
     public Vanish(Player player) {
         super(player);
@@ -42,13 +49,11 @@ public class Vanish extends SpiritAbility implements AddonAbility {
     }
 
     private void setFields() {
-        time = System.currentTimeMillis();
-
         // Main configuration
         this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Vanish.Cooldown");
         this.duration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Vanish.Duration");
         this.chargeTime = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Vanish.ChargeTime");
-        this.radius = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Vanish.Radius");
+        this.radius = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Vanish.Radius");
         this.particleFrequency = Spirits.plugin.getConfig().getInt("Abilities.Spirits.Neutral.Vanish.ParticleFrequency");
         this.removeFire = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Vanish.RemoveFire");
 
@@ -59,19 +64,18 @@ public class Vanish extends SpiritAbility implements AddonAbility {
 
         // Health logic
         if (doHalfEffect && player.getHealth() < healthReq) {
-            this.range = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Vanish.Range") / divideFactor;
+            this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Vanish.Range") / divideFactor;
         } else {
-            this.range = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Vanish.Range");
+            this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Vanish.Range");
         }
 
         this.origin = player.getLocation();
         this.isCharged = false;
-        this.removal = new Removal(player);
     }
 
     @Override
     public void progress() {
-        if (removal.stop() && !isCharged) {
+        if (!bPlayer.canBend(this) && !isCharged) {
             remove();
             return;
         }
@@ -84,7 +88,7 @@ public class Vanish extends SpiritAbility implements AddonAbility {
 
     private void chargingSequence() {
         if (player.isSneaking()) {
-            if (System.currentTimeMillis() > time + chargeTime) isCharged = true;
+            if (System.currentTimeMillis() > getStartTime() + chargeTime) isCharged = true;
             else if (new Random().nextInt(particleFrequency) == 0)
                 player.getWorld().spawnParticle(Particle.DRAGON_BREATH, player.getLocation().add(0, 1, 0), 1, 0, 0, 0, 0.09);
         } else if (!isCharged) {
@@ -96,7 +100,7 @@ public class Vanish extends SpiritAbility implements AddonAbility {
         if (player.isSneaking()) {
             playEffects();
 
-            if ((origin.distanceSquared(player.getLocation()) > radius * radius) || (System.currentTimeMillis() > time + duration)) {
+            if ((origin.distanceSquared(player.getLocation()) > radius * radius) || (System.currentTimeMillis() > getStartTime() + duration)) {
                 player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.5F, -1);
                 remove();
             }
@@ -154,26 +158,6 @@ public class Vanish extends SpiritAbility implements AddonAbility {
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) + Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Vanish.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) + Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Vanish.Enabled");
-    }
-
-    @Override
     public boolean isExplosiveAbility() {
         return false;
     }
@@ -192,9 +176,4 @@ public class Vanish extends SpiritAbility implements AddonAbility {
     public boolean isSneakAbility() {
         return true;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

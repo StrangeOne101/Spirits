@@ -1,32 +1,46 @@
 package me.numin.spirits.ability.spirit.combo;
 
-import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
 import com.projectkorra.projectkorra.ability.util.ComboManager;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.Spirits;
 import me.numin.spirits.ability.api.SpiritAbility;
-import me.numin.spirits.utilities.Removal;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class Levitation extends SpiritAbility implements AddonAbility, ComboAbility {
+public class Levitation extends SpiritAbility implements ComboAbility {
 
     //TODO: Implement sounds.
 
     private Location origin;
-    private Removal removal;
 
-    private boolean doAgilityMultiplier, doLevitationMultiplier, doPhaseMultiplier, wasFlying;
-    private double allowedHealthLoss, initialHealth, agilityMultiplier, levitationMultiplier, phaseMultiplier, range;
-    private long cooldown, duration, time;
+    @Attribute("EnableAgilityMultiplier")
+    private boolean doAgilityMultiplier;
+    @Attribute("EnableLevitationMultiplier")
+    private boolean doLevitationMultiplier;
+    @Attribute("EnablePhaseMultiplier")
+    private boolean doPhaseMultiplier;
+    private boolean wasFlying;
+    private double allowedHealthLoss, initialHealth;
+    @Attribute("AgilityMultiplier")
+    private double agilityMultiplier;
+    @Attribute("LevitationMultiplier")
+    private double levitationMultiplier;
+    @Attribute("PhaseMultiplier")
+    private double phaseMultiplier;
+    @Attribute(Attribute.RANGE)
+    private double range;
+    @Attribute(Attribute.COOLDOWN)
+    private long cooldown;
+    @Attribute(Attribute.DURATION)
+    private long duration;
 
     public Levitation(Player player) {
         super(player);
@@ -53,17 +67,15 @@ public class Levitation extends SpiritAbility implements AddonAbility, ComboAbil
 
         this.wasFlying = player.isFlying();
         this.origin = player.getLocation();
-        this.removal = new Removal(player);
-        this.time = System.currentTimeMillis();
         this.initialHealth = player.getHealth();
     }
 
     @Override
     public void progress() {
-        if (removal.stop() ||
-                origin.distance(player.getLocation()) > range ||
+        if (!bPlayer.canBendIgnoreBinds(this) ||
+                origin.distanceSquared(player.getLocation()) > range * range ||
                 (player.getHealth() < (initialHealth - allowedHealthLoss)) ||
-                System.currentTimeMillis() > time + duration) {
+                System.currentTimeMillis() > getStartTime() + duration) {
             remove();
             return;
         }
@@ -81,7 +93,7 @@ public class Levitation extends SpiritAbility implements AddonAbility, ComboAbil
     public void remove() {
         player.setFlying(wasFlying);
 
-        long duration = System.currentTimeMillis() - time;
+        long duration = System.currentTimeMillis() - getStartTime();
         if (doAgilityMultiplier) {
             long agilityCooldown = (long) (duration * agilityMultiplier);
             bPlayer.addCooldown("Dash", agilityCooldown);
@@ -136,27 +148,6 @@ public class Levitation extends SpiritAbility implements AddonAbility, ComboAbil
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(Methods.SpiritType.NEUTRAL) +
-                Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Levitation.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(Methods.SpiritType.NEUTRAL) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(Methods.SpiritType.NEUTRAL) + Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Combo.Levitation.Enabled");
-    }
-
-    @Override
     public boolean isSneakAbility() {
         return false;
     }
@@ -175,9 +166,4 @@ public class Levitation extends SpiritAbility implements AddonAbility, ComboAbil
     public boolean isExplosiveAbility() {
         return false;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

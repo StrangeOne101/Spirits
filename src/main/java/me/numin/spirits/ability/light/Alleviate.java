@@ -2,7 +2,6 @@ package me.numin.spirits.ability.light;
 
 import java.util.Random;
 
-import me.numin.spirits.utilities.Removal;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -16,7 +15,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import com.projectkorra.projectkorra.GeneralMethods;
-import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.numin.spirits.Spirits;
@@ -24,7 +22,7 @@ import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.LightAbility;
 
-public class Alleviate extends LightAbility implements AddonAbility {
+public class Alleviate extends LightAbility {
 
     //TODO: Make new sounds.
     //TODO: Implement configuration.
@@ -32,7 +30,6 @@ public class Alleviate extends LightAbility implements AddonAbility {
     private DustOptions customColor;
     private LivingEntity target;
     private Location location;
-    private Removal removal;
     private Vector vector = new Vector(1, 0, 0);
 
     private boolean hasReached, removeNegPots;
@@ -77,13 +74,11 @@ public class Alleviate extends LightAbility implements AddonAbility {
         this.customColor = new DustOptions(Color.fromRGB(red, green, blue), 1);
 
         this.location = player.getLocation().clone().add(0, 1, 0);
-        this.removal = new Removal(player, true);
     }
 
     @Override
     public void progress() {
-        if (removal.stop() ||
-                !bPlayer.getBoundAbilityName().equals(getName())) {
+        if (!bPlayer.canBend(this) || !player.isSneaking()) {
             remove();
             return;
         }
@@ -210,27 +205,6 @@ public class Alleviate extends LightAbility implements AddonAbility {
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(SpiritType.LIGHT) +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.Alleviate.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(SpiritType.LIGHT) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(SpiritType.LIGHT) + Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.LightSpirit.Alleviate.Enabled");
-    }
-
-    @Override
     public boolean isExplosiveAbility() {
         return false;
     }
@@ -249,9 +223,4 @@ public class Alleviate extends LightAbility implements AddonAbility {
     public boolean isSneakAbility() {
         return true;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

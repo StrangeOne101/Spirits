@@ -3,27 +3,27 @@ package me.numin.spirits.ability.spirit;
 import java.util.Random;
 
 import com.projectkorra.projectkorra.ability.CoreAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import me.numin.spirits.ability.spirit.combo.Levitation;
-import me.numin.spirits.utilities.Removal;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-
-import com.projectkorra.projectkorra.ability.AddonAbility;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.SpiritAbility;
 
-public class Soar extends SpiritAbility implements AddonAbility {
+public class Soar extends SpiritAbility {
 
     //TODO: Update sounds.
 
-    private Removal removal;
-
+    @Attribute(Attribute.SPEED)
     private double speed;
-    private long cooldown, duration, time;
+    @Attribute(Attribute.COOLDOWN)
+    private long cooldown;
+    @Attribute(Attribute.DURATION)
+    private long duration;
 
     public Soar(Player player) {
         super(player);
@@ -31,7 +31,6 @@ public class Soar extends SpiritAbility implements AddonAbility {
         if (!bPlayer.canBend(this) || CoreAbility.hasAbility(player, Levitation.class)) {
             return;
         }
-        time = System.currentTimeMillis();
         setFields();
         start();
     }
@@ -40,12 +39,11 @@ public class Soar extends SpiritAbility implements AddonAbility {
         this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Agility.Soar.Cooldown");
         this.duration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Agility.Soar.Duration");
         this.speed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Agility.Soar.Speed");
-        this.removal = new Removal(player, true);
     }
 
     @Override
     public void progress() {
-        if (removal.stop()) {
+        if (!bPlayer.canBend(this)) {
             remove();
             return;
         }
@@ -54,7 +52,7 @@ public class Soar extends SpiritAbility implements AddonAbility {
 
     private void progressSoar() {
         if (player.isSneaking()) {
-            if (System.currentTimeMillis() > time + duration) {
+            if (System.currentTimeMillis() > getStartTime() + duration) {
                 remove();
             } else {
                 player.setVelocity(Methods.setVelocity(player, (float)speed));
@@ -94,26 +92,6 @@ public class Soar extends SpiritAbility implements AddonAbility {
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) + Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Agility.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(SpiritType.NEUTRAL) + Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Agility.Enabled");
-    }
-
-    @Override
     public boolean isExplosiveAbility() {
         return false;
     }
@@ -132,9 +110,4 @@ public class Soar extends SpiritAbility implements AddonAbility {
     public boolean isSneakAbility() {
         return true;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

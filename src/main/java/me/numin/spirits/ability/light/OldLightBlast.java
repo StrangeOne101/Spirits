@@ -1,12 +1,11 @@
 package me.numin.spirits.ability.light;
 
 import com.projectkorra.projectkorra.GeneralMethods;
-import com.projectkorra.projectkorra.ability.AddonAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.Spirits;
 import me.numin.spirits.ability.api.LightAbility;
-import me.numin.spirits.utilities.Removal;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -18,7 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public class LightBlast extends LightAbility implements AddonAbility {
+public class OldLightBlast extends LightAbility {
 
     //TODO: Add sounds.
 
@@ -27,34 +26,43 @@ public class LightBlast extends LightAbility implements AddonAbility {
     private Entity target;
     private LightBlastType type;
     private Location blast, location, origin;
-    private Removal removal;
     private Vector direction, vector;
 
     private boolean burst = true, canHeal, controllable, hasReached = false;
-    private double damage, initialBlastSpeed, blastRadius, finalBlastSpeed, range;
+    @Attribute(Attribute.DAMAGE)
+    private double damage;
+    @Attribute(Attribute.SPEED)
+    private double initialBlastSpeed;
+    @Attribute(Attribute.RADIUS)
+    private double blastRadius;
+    @Attribute(Attribute.SPEED)
+    private double finalBlastSpeed;
+    @Attribute(Attribute.RANGE)
+    private double range;
     private int potionDuration, potionPower;
+    @Attribute(Attribute.COOLDOWN)
     private long cooldown, selectionDuration, time;
 
     public enum LightBlastType {
         SHIFT, CLICK
     }
 
-    public LightBlast(Player player, LightBlastType type) {
+    public OldLightBlast(Player player, LightBlastType type) {
         super(player);
 
         if (!bPlayer.canBend(this)) return;
 
         if (type != null) this.type = type;
 
-        if (hasAbility(player, LightBlast.class) && type == LightBlastType.SHIFT) {
-            LightBlast lightBlast = getAbility(player, LightBlast.class);
-            if (lightBlast.target != null) {
+        if (hasAbility(player, OldLightBlast.class) && type == LightBlastType.SHIFT) {
+            OldLightBlast oldLightBlast = getAbility(player, OldLightBlast.class);
+            if (oldLightBlast.target != null) {
                 // Makes sure the player is looking at their target.
-                Entity targetEntity = GeneralMethods.getTargetedEntity(player, lightBlast.range);
-                if (targetEntity == null || !targetEntity.equals(lightBlast.target)) return;
+                Entity targetEntity = GeneralMethods.getTargetedEntity(player, oldLightBlast.range);
+                if (targetEntity == null || !targetEntity.equals(oldLightBlast.target)) return;
 
-                lightBlast.location = player.getLocation().add(0, 1, 0);
-                lightBlast.canHeal = true;
+                oldLightBlast.location = player.getLocation().add(0, 1, 0);
+                oldLightBlast.canHeal = true;
             }
         } else {
             setFields();
@@ -64,22 +72,21 @@ public class LightBlast extends LightAbility implements AddonAbility {
     }
 
     private void setFields() {
-        this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.LightSpirit.LightBlast.Cooldown");
-        this.controllable = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.LightSpirit.LightBlast.Controllable");
-        this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.Damage");
-        this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.Range");
-        this.selectionDuration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.LightSpirit.LightBlast.SelectionDuration");
-        this.potionDuration = Spirits.plugin.getConfig().getInt("Abilities.Spirits.LightSpirit.LightBlast.PotionDuration");
-        this.potionPower = Spirits.plugin.getConfig().getInt("Abilities.Spirits.LightSpirit.LightBlast.PotionPower");
-        this.initialBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.FirstBlastSpeed");
-        this.blastRadius = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.BlastRadius");
-        this.finalBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.SecondBlastSpeed");
+        this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.LightSpirit.OldLightBlast.Cooldown");
+        this.controllable = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.LightSpirit.OldLightBlast.Controllable");
+        this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.OldLightBlast.Damage");
+        this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.OldLightBlast.Range");
+        this.selectionDuration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.LightSpirit.OldLightBlast.SelectionDuration");
+        this.potionDuration = Spirits.plugin.getConfig().getInt("Abilities.Spirits.LightSpirit.OldLightBlast.PotionDuration");
+        this.potionPower = Spirits.plugin.getConfig().getInt("Abilities.Spirits.LightSpirit.OldLightBlast.PotionPower");
+        this.initialBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.OldLightBlast.FirstBlastSpeed");
+        this.blastRadius = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.OldLightBlast.BlastRadius");
+        this.finalBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.OldLightBlast.SecondBlastSpeed");
 
         this.direction = player.getLocation().getDirection();
         this.origin = player.getLocation().add(0, 1, 0);
         this.location = origin.clone();
 
-        this.removal = new Removal(player);
         this.vector = new Vector(1, 0, 0);
 
         this.canHeal = false;
@@ -87,7 +94,7 @@ public class LightBlast extends LightAbility implements AddonAbility {
 
     @Override
     public void progress() {
-        if (this.removal.stop()) {
+        if (!bPlayer.canBend(this)) {
             remove();
             return;
         }
@@ -243,43 +250,22 @@ public class LightBlast extends LightAbility implements AddonAbility {
 
     @Override
     public String getName() {
-        return "LightBlast";
+        return "OldLightBlast";
     }
 
     @Override
     public String getDescription() {
         return Methods.setSpiritDescription(Methods.SpiritType.LIGHT, "Offense / Utility") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.LightBlast.Description");
-    }
-
-    @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(Methods.SpiritType.LIGHT) +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.LightBlast.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(Methods.SpiritType.LIGHT) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(Methods.SpiritType.LIGHT) + Methods.getVersion();
+                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.OldLightBlast.Description");
     }
 
     @Override
     public Location getLocation() {
-        return blast != null ? blast : player.getLocation();
+        return location;
     }
 
     @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.LightSpirit.LightBlast.Enabled");
+    public boolean isHiddenAbility() {
+        return true;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

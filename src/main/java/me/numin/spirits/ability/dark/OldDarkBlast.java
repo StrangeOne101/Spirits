@@ -1,12 +1,11 @@
 package me.numin.spirits.ability.dark;
 
 import com.projectkorra.projectkorra.GeneralMethods;
-import com.projectkorra.projectkorra.ability.AddonAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import me.numin.spirits.ability.api.DarkAbility;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.Spirits;
-import me.numin.spirits.utilities.Removal;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -19,43 +18,50 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public class DarkBlast extends DarkAbility implements AddonAbility {
+public class OldDarkBlast extends DarkAbility {
 
     //TODO: Add sounds.
 
     private DustOptions black = new DustOptions(Color.fromRGB(0, 0, 0), 1);
     private DustOptions purple = new DustOptions(Color.fromRGB(150, 0, 216), 1);
-    private Entity target;
+    private LivingEntity target;
     private DarkBlastType type;
     private Location blast, location, origin;
-    private Removal removal;
     private Vector direction, vector;
 
     private boolean burst = true, canDamage, controllable, hasReached = false;
-    private double blastRadius, damage, finalBlastSpeed, initialBlastSpeed, range;
+    @Attribute(Attribute.RADIUS)
+    private double blastRadius;
+    @Attribute(Attribute.DAMAGE)
+    private double damage, finalBlastSpeed, initialBlastSpeed;
+    @Attribute(Attribute.RANGE)
+    private double range;
     private int potionDuration, potionPower;
-    private long cooldown, selectionDuration, time;
+    @Attribute(Attribute.COOLDOWN)
+    private long cooldown;
+
+    private long selectionDuration, time;
 
     public enum DarkBlastType {
         SHIFT, CLICK
     }
 
-    public DarkBlast(Player player, DarkBlastType type) {
+    public OldDarkBlast(Player player, DarkBlastType type) {
         super(player);
 
         if (!bPlayer.canBend(this)) return;
 
         if (type != null) this.type = type;
 
-        if (hasAbility(player, DarkBlast.class)) {
-            DarkBlast darkBlast = getAbility(player, DarkBlast.class);
-            if (darkBlast.target != null) {
+        if (hasAbility(player, OldDarkBlast.class)) {
+            OldDarkBlast oldDarkBlast = getAbility(player, OldDarkBlast.class);
+            if (oldDarkBlast.target != null) {
                 // Makes sure the player is looking at their target.
-                Entity targetEntity = GeneralMethods.getTargetedEntity(player, darkBlast.range);
-                if (targetEntity == null || !targetEntity.equals(darkBlast.target)) return;
+                Entity targetEntity = GeneralMethods.getTargetedEntity(player, oldDarkBlast.range);
+                if (targetEntity == null || !targetEntity.equals(oldDarkBlast.target)) return;
 
-                darkBlast.location = player.getLocation().add(0, 1, 0);
-                darkBlast.canDamage = true;
+                oldDarkBlast.location = player.getLocation().add(0, 1, 0);
+                oldDarkBlast.canDamage = true;
             }
         } else {
             setFields();
@@ -65,22 +71,21 @@ public class DarkBlast extends DarkAbility implements AddonAbility {
     }
 
     private void setFields() {
-        this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.DarkSpirit.DarkBlast.Cooldown");
-        this.controllable = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.DarkSpirit.DarkBlast.Controllable");
-        this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.DarkBlast.Damage");
-        this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.DarkBlast.Range");
-        this.selectionDuration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.DarkSpirit.DarkBlast.DurationOfSelection");
-        this.potionDuration = Spirits.plugin.getConfig().getInt("Abilities.Spirits.DarkSpirit.DarkBlast.PotionDuration");
-        this.potionPower = Spirits.plugin.getConfig().getInt("Abilities.Spirits.DarkSpirit.DarkBlast.PotionPower");
-        this.initialBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.DarkBlast.FirstBlastSpeed");
-        this.blastRadius = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.DarkBlast.BlastRadius");
-        this.finalBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.DarkBlast.SecondBlastSpeed");
+        this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.DarkSpirit.OldDarkBlast.Cooldown");
+        this.controllable = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.DarkSpirit.OldDarkBlast.Controllable");
+        this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.Damage");
+        this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.Range");
+        this.selectionDuration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.DarkSpirit.OldDarkBlast.DurationOfSelection");
+        this.potionDuration = Spirits.plugin.getConfig().getInt("Abilities.Spirits.DarkSpirit.OldDarkBlast.PotionDuration");
+        this.potionPower = Spirits.plugin.getConfig().getInt("Abilities.Spirits.DarkSpirit.OldDarkBlast.PotionPower");
+        this.initialBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.FirstBlastSpeed");
+        this.blastRadius = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.BlastRadius");
+        this.finalBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.SecondBlastSpeed");
 
         this.direction = player.getLocation().getDirection();
         this.origin = player.getLocation().add(0, 1, 0);
         this.location = origin.clone();
 
-        this.removal = new Removal(player);
         this.vector = new Vector(1, 0, 0);
 
         this.canDamage = false;
@@ -88,7 +93,8 @@ public class DarkBlast extends DarkAbility implements AddonAbility {
 
     @Override
     public void progress() {
-        if (this.removal.stop()) {
+        if (player.isDead() || !player.isOnline() || location.getWorld() != player.getWorld() ||
+                GeneralMethods.isRegionProtectedFromBuild(player, player.getLocation())) {
             remove();
             return;
         }
@@ -136,7 +142,7 @@ public class DarkBlast extends DarkAbility implements AddonAbility {
 
             for (Entity target : GeneralMethods.getEntitiesAroundPoint(blast, this.blastRadius)) {
                 if (target instanceof LivingEntity && !target.getUniqueId().equals(player.getUniqueId())) {
-                    this.target = target;
+                    this.target = (LivingEntity) target;
                 }
             }
         } else {
@@ -149,7 +155,7 @@ public class DarkBlast extends DarkAbility implements AddonAbility {
 
     private void shootHomingBlast() {
         if (!hasReached) {
-            this.blast = Methods.advanceLocationToPoint(vector, location, target.getLocation().add(0, 1,0), this.finalBlastSpeed);
+            this.blast = Methods.advanceLocationToPoint(vector, location, target.getEyeLocation(), this.finalBlastSpeed);
 
             player.getWorld().spawnParticle(Particle.REDSTONE, location, 2, 0.1, 0.1, 0.1, 0, purple);
 
@@ -198,11 +204,6 @@ public class DarkBlast extends DarkAbility implements AddonAbility {
     }
 
     @Override
-    public void remove() {
-        super.remove();
-    }
-
-    @Override
     public boolean isSneakAbility() {
         return true;
     }
@@ -234,29 +235,13 @@ public class DarkBlast extends DarkAbility implements AddonAbility {
 
     @Override
     public String getName() {
-        return "DarkBlast";
+        return "OldDarkBlast";
     }
 
     @Override
     public String getDescription() {
         return Methods.setSpiritDescription(Methods.SpiritType.DARK, "Offense") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.DarkBlast.Description");
-    }
-
-    @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(Methods.SpiritType.DARK) +
-                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.DarkBlast.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(Methods.SpiritType.DARK) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(Methods.SpiritType.DARK) + Methods.getVersion();
+                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.OldDarkBlast.Description");
     }
 
     @Override
@@ -265,12 +250,7 @@ public class DarkBlast extends DarkAbility implements AddonAbility {
     }
 
     @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.DarkSpirit.DarkBlast.Enabled");
+    public boolean isHiddenAbility() {
+        return true;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

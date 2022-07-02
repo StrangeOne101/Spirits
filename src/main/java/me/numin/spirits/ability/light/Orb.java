@@ -1,6 +1,6 @@
 package me.numin.spirits.ability.light;
 
-import me.numin.spirits.utilities.Removal;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -11,7 +11,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.projectkorra.projectkorra.GeneralMethods;
-import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
@@ -24,17 +23,27 @@ import me.numin.spirits.ability.api.LightAbility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Orb extends LightAbility implements AddonAbility {
+public class Orb extends LightAbility {
 
     //TODO: Add sounds.
 
     private Location targetLoc;
-    private Removal removal;
 
     private boolean checkEntities, isCharged, playDormant, progressExplosion, registerOrbLoc, registerStageTimer, requireGround;
-    private double damage, detonateRange, effectRange;
+    @Attribute(Attribute.DAMAGE)
+    private double damage;
+    @Attribute("DetonateRange")
+    private double detonateRange;
+    @Attribute(Attribute.RANGE)
+    private double effectRange;
     private int blindDuration, nauseaDuration, plantRange, potionAmp;
-    private long chargeTime, cooldown, duration, stageTime, stageTimer, time;
+    @Attribute(Attribute.CHARGE_DURATION)
+    private long chargeTime;
+    @Attribute(Attribute.COOLDOWN)
+    private long cooldown;
+    @Attribute(Attribute.DURATION)
+    private long duration;
+    private long stageTime, stageTimer;
 
     public Orb(Player player) {
         super(player);
@@ -43,7 +52,6 @@ public class Orb extends LightAbility implements AddonAbility {
             return;
 
         setFields();
-        time = System.currentTimeMillis();
         start();
     }
 
@@ -63,19 +71,17 @@ public class Orb extends LightAbility implements AddonAbility {
 
         this.registerOrbLoc = true;
         this.registerStageTimer = true;
-
-        this.removal = new Removal(player);
     }
 
     @Override
     public void progress() {
-        if (removal.stop()) {
+        if (!bPlayer.canBendIgnoreBinds(this)) {
             remove();
             return;
         }
         if (!isCharged) {
             if (player.isSneaking()) {
-                if (System.currentTimeMillis() > time + chargeTime)
+                if (System.currentTimeMillis() > getStartTime() + chargeTime)
                     isCharged = true;
             } else remove();
         } else {
@@ -95,9 +101,12 @@ public class Orb extends LightAbility implements AddonAbility {
                             if (GeneralMethods.isSolid(targetLoc.getBlock()))
                                 targetLoc.add(0, 1, 0);
                         }
-                    } registerOrbLoc = false;
-                } displayOrb(targetLoc);
-            } explodeOrb();
+                    }
+                    registerOrbLoc = false;
+                }
+                displayOrb(targetLoc);
+            }
+            explodeOrb();
         }
     }
 
@@ -116,7 +125,7 @@ public class Orb extends LightAbility implements AddonAbility {
                 playDormant = false;
             }
         }
-        if (System.currentTimeMillis() > time + duration) {
+        if (System.currentTimeMillis() > getStartTime() + duration) {
             playDormant = false;
             player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 30, 0, 0, 0, 0.09);
             bPlayer.addCooldown(this);
@@ -186,31 +195,6 @@ public class Orb extends LightAbility implements AddonAbility {
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(SpiritType.LIGHT) +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.Orb.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-
-        return Methods.getSpiritColor(SpiritType.LIGHT) + "" +
-                Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-
-        return Methods.getSpiritColor(SpiritType.LIGHT) +
-                Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.LightSpirit.Orb.Enabled");
-    }
-
-    @Override
     public boolean isExplosiveAbility() {
         return false;
     }
@@ -229,9 +213,4 @@ public class Orb extends LightAbility implements AddonAbility {
     public boolean isSneakAbility() {
         return false;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }

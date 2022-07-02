@@ -1,6 +1,6 @@
 package me.numin.spirits.ability.dark;
 
-import me.numin.spirits.utilities.Removal;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.projectkorra.projectkorra.GeneralMethods;
-import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.numin.spirits.Spirits;
@@ -18,7 +17,7 @@ import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.DarkAbility;
 
-public class Strike extends DarkAbility implements AddonAbility {
+public class Strike extends DarkAbility {
 
     //TODO: Remove the checkEntities boolean and add an Entity variable instead.
     //TODO: Add sounds.
@@ -26,12 +25,16 @@ public class Strike extends DarkAbility implements AddonAbility {
     private Entity target;
     private Location location;
     private Location origin;
-    private Removal removal;
     private Vector direction;
 
     private boolean checkEntities;
-    private double damage, radius;
-    private int range;
+    @Attribute(Attribute.DAMAGE)
+    private double damage;
+    @Attribute(Attribute.RADIUS)
+    private double radius;
+    @Attribute(Attribute.RANGE)
+    private double range;
+    @Attribute(Attribute.COOLDOWN)
     private long cooldown;
 
     public Strike(Player player) {
@@ -48,18 +51,17 @@ public class Strike extends DarkAbility implements AddonAbility {
     private void setFields() {
         this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.DarkSpirit.Strike.Cooldown");
         this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.Strike.Damage");
-        this.range = Spirits.plugin.getConfig().getInt("Abilities.Spirits.DarkSpirit.Strike.Range");
+        this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.Strike.Range");
         this.radius = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.Strike.Radius");
         this.origin = player.getLocation().clone().add(0, 1, 0);
         this.location = origin.clone();
         this.direction = player.getLocation().getDirection();
         this.checkEntities = true;
-        this.removal = new Removal(player);
     }
 
     @Override
     public void progress() {
-        if (removal.stop()) {
+        if (!bPlayer.canBend(this)) {
             remove();
             return;
         }
@@ -124,26 +126,6 @@ public class Strike extends DarkAbility implements AddonAbility {
     }
 
     @Override
-    public String getInstructions() {
-        return Methods.getSpiritColor(SpiritType.DARK) + Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.Strike.Instructions");
-    }
-
-    @Override
-    public String getAuthor() {
-        return Methods.getSpiritColor(SpiritType.DARK) + "" + Methods.getAuthor();
-    }
-
-    @Override
-    public String getVersion() {
-        return Methods.getSpiritColor(SpiritType.DARK) + Methods.getVersion();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.DarkSpirit.Strike.Enabled");
-    }
-
-    @Override
     public boolean isExplosiveAbility() {
         return false;
     }
@@ -162,9 +144,4 @@ public class Strike extends DarkAbility implements AddonAbility {
     public boolean isSneakAbility() {
         return false;
     }
-
-    @Override
-    public void load() {}
-    @Override
-    public void stop() {}
 }
