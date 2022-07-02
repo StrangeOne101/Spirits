@@ -1,9 +1,15 @@
 package me.numin.spirits.ability.spirit;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import com.projectkorra.projectkorra.attribute.Attribute;
 
+import com.projectkorra.projectkorra.util.ActionBar;
+import me.numin.spirits.utilities.DummyAbility;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -31,6 +37,8 @@ public class Possess extends SpiritAbility {
     //TODO: Test how it interacts with abilities like AirShield and Shelter.
     //TODO: Add configurable speed for the armor stand/blast feature.
 
+    private static Map<UUID, Possess> VICTIMS = new HashMap<>();
+
     private ArmorStand armorStand;
     private DustOptions purple = new DustOptions(Color.fromRGB(130, 0, 193), 1);
     private LivingEntity target;
@@ -38,11 +46,18 @@ public class Possess extends SpiritAbility {
     private Location blast, playerOrigin;
     private Vector vector = new Vector(1, 0, 0);
 
-    private boolean hasStarted = false, playEssence, wasFlying;
+    private boolean hasStarted = false, traveling, wasFlying;
+    private double minDamage;
+    @Attribute("SelfDamage")
+    private double selfDamage;
     @Attribute(Attribute.DAMAGE)
     private double damage;
     @Attribute(Attribute.RANGE)
     private double range;
+    @Attribute("Durability")
+    private int durability;
+
+    private int breakingDurability; //The counter used to determine when the possession is broken.
 
     //Sound effect
     private final float pitch = 0F;
@@ -51,7 +66,12 @@ public class Possess extends SpiritAbility {
     private long cooldown;
     @Attribute(Attribute.DURATION)
     private long duration;
-    private long realStartTime;
+    @Attribute(Attribute.CHARGE_DURATION)
+    private long chargeTime;
+    private long possessStartTime, chargeStartTime;
+
+    private String possessString;
+    private String possessLeaveString;
 
     public Possess(Player player) {
         super(player);
@@ -67,10 +87,18 @@ public class Possess extends SpiritAbility {
     private void setFields() {
         this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Possess.Cooldown");
         this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Possess.Range");
-        this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Possess.Damage");
+        this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Possess.MaxDamage");
+        this.minDamage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Possess.MinDamage");
+        this.selfDamage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Possess.FailureSelfDamage");
         this.duration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Possess.Duration");
+        this.chargeTime = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Possess.ChargeTime");
+        this.durability = Spirits.plugin.getConfig().getInt("Abilities.Spirits.Neutral.Possess.Durability", 8);
         this.playerOrigin = player.getLocation().add(0, 1, 0);
-        this.playEssence = true;
+        this.possessString = ChatColor.translateAlternateColorCodes('&',
+                Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.Possessed"));
+        this.possessLeaveString = ChatColor.translateAlternateColorCodes('&',
+                Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.PossessionBroken"));
+        this.traveling = true;
     }
 
     @Override
@@ -90,7 +118,6 @@ public class Possess extends SpiritAbility {
             Entity entity = GeneralMethods.getTargetedEntity(player, range);
             if (entity instanceof LivingEntity) {
                 this.target = (LivingEntity) entity;
-                this.realStartTime = System.currentTimeMillis();
 
                 player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_BLINDNESS, 0.3F, -1);
                 Methods.animateVanish(player);
@@ -98,16 +125,21 @@ public class Possess extends SpiritAbility {
                 this.armorStand = this.createArmorStand();
                 this.originalGameMode = player.getGameMode();
                 this.wasFlying = player.isFlying();
+                this.chargeStartTime = System.currentTimeMillis();
 
                 player.setGameMode(GameMode.SPECTATOR);
                 player.setSpectatorTarget(this.armorStand);
+
                 hasStarted = true;
+                traveling = true;
             }
         }
 
         if (hasStarted) {
             if (player.isSneaking()) {
-                remove(); //TODO Change this to damage the player based on the built up duration
+                if (System.currentTimeMillis() > possessStartTime + duration) {
+                    this.animateFinalBlow(target.getEyeLocation());
+                }
             } else {
                 this.possession();
             }
@@ -117,14 +149,15 @@ public class Possess extends SpiritAbility {
     private void possession() {
         Location targetLocation = target.getEyeLocation();
 
-        if (System.currentTimeMillis() > realStartTime + duration) {
-            this.animateFinalBlow(targetLocation);
+
+        this.animateTargetEffects(targetLocation);
+        if (this.traveling) {
+            this.animateEssence(targetLocation);
         } else {
-            this.animateTargetEffects(targetLocation);
-            if (this.playEssence) {
-                this.animateEssence(targetLocation);
-            } else {
-                target.getWorld().spawnParticle(Particle.DRAGON_BREATH, targetLocation, 1, 0.3, 1, 0.3, 0.02);
+            target.getWorld().spawnParticle(Particle.DRAGON_BREATH, targetLocation, 1, 0.3, 1, 0.3, 0.02);
+
+            if (System.currentTimeMillis() > possessStartTime + chargeTime) {
+                this.animateFinalBlow(targetLocation);
             }
         }
     }
@@ -133,7 +166,7 @@ public class Possess extends SpiritAbility {
         this.blast = Methods.advanceLocationToPoint(vector, this.playerOrigin, targetLocation, 0.6);
         this.armorStand.teleport(this.blast);
 
-        if (new Random().nextInt(5) == 0) {
+        if (getRunningTicks() % 5 == 0) {
             player.getWorld().playSound(targetLocation, Sound.ENTITY_EVOKER_CAST_SPELL, this.volume, this.pitch);
             Methods.playSpiritParticles(player, this.blast, 0.5, 0.5, 0.5, 0, 1);
         }
@@ -143,16 +176,29 @@ public class Possess extends SpiritAbility {
         player.getWorld().spawnParticle(Particle.REDSTONE, this.blast, 5, 0, 0, 0, 1, this.purple);
 
         if (target.getLocation().distanceSquared(this.blast) < 1) {
-            this.playEssence = false;
+            this.traveling = false;
+            this.possessStartTime = System.currentTimeMillis();
             player.setSpectatorTarget(this.target);
             this.armorStand.remove();
+            if (target instanceof Player) {
+                if (VICTIMS.containsKey(target.getUniqueId())) { //From another player
+                    Possess other = VICTIMS.get(target.getUniqueId());
+                    other.remove(); //Force them out, damage the player
+                }
+                VICTIMS.put(target.getUniqueId(), this);
+                ActionBar.sendActionBar(this.possessString, (Player) target);
+            }
         } else {
             player.setSpectatorTarget(this.armorStand);
         }
     }
 
     private void animateFinalBlow(Location targetLocation) {
-        DamageHandler.damageEntity(target, damage, this);
+        long currentDuration = System.currentTimeMillis() - possessStartTime;
+        currentDuration = Math.max(currentDuration, duration); //Make sure the duration is maxed at 100%
+        double multiplier = (double)currentDuration / (double) duration;
+        double extraDamage = (damage - minDamage) * multiplier; //Calculate the extra damage to give based on the duration possessed
+        DamageHandler.damageEntity(target, minDamage + extraDamage, this);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_HURT, 0.2F, 0F);
         player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, targetLocation, 1, 0, 0, 0, 0);
         player.getWorld().spawnParticle(Particle.CRIT, targetLocation, 5, 0.3, 1, 0.3, 0);
@@ -167,6 +213,27 @@ public class Possess extends SpiritAbility {
         if (new Random().nextInt(5) == 0) {
             player.getWorld().playSound(targetLocation, Sound.ENTITY_EVOKER_CAST_SPELL, this.volume, this.pitch);
             if (this.blast != null) Methods.playSpiritParticles(player, this.blast, 0.4, 1, 0.4, 0, 1);
+        }
+    }
+
+    private void displayCharge() {
+        long charge = System.currentTimeMillis() - this.chargeStartTime;
+        if (charge >= chargeTime) {
+            this.traveling = true;
+            return;
+        }
+
+        for (int i = 0; i < 7; i++) {
+            double angle = 360D / 7D * i;
+            double angleDrift = 360D / 7D / 2; //The max an angle can shift from the center
+            angleDrift *= Math.sin(Math.toRadians(charge / 40D));
+            angle += angleDrift;
+
+            double x = Math.cos(Math.toRadians(angle)) * 0.8;
+            double z = Math.sin(Math.toRadians(angle)) * 0.8;
+            double y = (double)charge / (double)chargeTime * 1.6;
+
+            player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation().add(x, y, z), 1, this.purple);
         }
     }
 
@@ -186,10 +253,16 @@ public class Possess extends SpiritAbility {
 
         if (this.armorStand != null) this.armorStand.remove();
 
-        if (playEssence) player.teleport(this.blast);
+        if (traveling) player.teleport(this.blast);
         else player.teleport(player.getLocation().add(0, 2, 0));
 
         bPlayer.addCooldown(this);
+
+        if (target instanceof Player) {
+            VICTIMS.remove(target.getUniqueId());
+            ActionBar.sendActionBar(possessLeaveString);
+        }
+
         super.remove();
     }
 
@@ -230,6 +303,34 @@ public class Possess extends SpiritAbility {
 
     @Override
     public boolean isSneakAbility() {
+        return false;
+    }
+
+    public boolean breakDurability() {
+        breakingDurability++;
+
+        if (breakingDurability >= durability) {
+            remove();
+            DamageHandler.damageEntity(player, (Player) target, selfDamage, new DummyAbility(this).name("PossessRecoil"), true);
+            player.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_ELDER_GUARDIAN_HURT, 1F, 1.5F);
+            return true;
+        } else {
+            player.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PANDA_BITE, 1F, 1.5F);
+            return false;
+        }
+    }
+
+    /**
+     * Makes the player punch any players currently possessing them
+     * @param player The player punching
+     * @return True if the player managed to punch a possessor
+     */
+    public static boolean punchPossessing(Player player) {
+        Possess instance = VICTIMS.get(player.getUniqueId());
+        if (instance != null) {
+            instance.breakDurability();
+            return true;
+        }
         return false;
     }
 }

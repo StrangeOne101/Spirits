@@ -29,6 +29,8 @@ public class Abilities implements Listener {
         Player player = event.getPlayer();
         BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
 
+        Possess.punchPossessing(event.getPlayer());
+
         if (event.isCancelled() || bPlayer == null) return;
 
         if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Agility")) {

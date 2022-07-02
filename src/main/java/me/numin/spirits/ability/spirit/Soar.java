@@ -2,6 +2,7 @@ package me.numin.spirits.ability.spirit;
 
 import java.util.Random;
 
+import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
 import me.numin.spirits.ability.spirit.combo.Levitation;
@@ -54,8 +55,8 @@ public class Soar extends SpiritAbility {
             if (System.currentTimeMillis() > getStartTime() + duration) {
                 remove();
             } else {
-                player.setVelocity(Methods.setVelocity(player, (float)speed));
-                if (new Random().nextInt(5) == 0) {
+                GeneralMethods.setVelocity(this, player, player.getLocation().getDirection().multiply(speed));
+                if (getRunningTicks() % 5 == 0) {
                     player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_AMBIENT, 0.3F, 5F);
                 }
                 Methods.playSpiritParticles(player, player.getLocation(), 0.5, 0.5, 0.5, 0, 2);
