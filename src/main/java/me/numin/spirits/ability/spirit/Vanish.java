@@ -16,7 +16,6 @@ import com.projectkorra.projectkorra.GeneralMethods;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.SpiritAbility;
 
 public class Vanish extends SpiritAbility {
@@ -152,9 +151,8 @@ public class Vanish extends SpiritAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.NEUTRAL, "Mobility") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Vanish.Description");
+    public String getAbilityType() {
+        return MOBILITY;
     }
 
     @Override

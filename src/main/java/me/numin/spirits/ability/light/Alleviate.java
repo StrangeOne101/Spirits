@@ -19,7 +19,6 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.LightAbility;
 
 public class Alleviate extends LightAbility {
@@ -199,9 +198,8 @@ public class Alleviate extends LightAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.LIGHT, "Utility") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.Alleviate.Description");
+    public String getAbilityType() {
+        return UTILITY;
     }
 
     @Override

@@ -9,9 +9,8 @@ import com.projectkorra.projectkorra.event.BendingReloadEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent.Result;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import me.numin.spirits.Spirits;
-import me.numin.spirits.config.Config;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.SpiritElement;
+import me.numin.spirits.SpiritElement;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -45,30 +44,30 @@ public class PKEvents implements Listener {
     @EventHandler
     public void elementChange(PlayerChangeElementEvent event) {
         //We want to add the Spirit element to players if they choose light or dark elements
-        if (event.getElement() == SpiritElement.DARK_SPIRIT || event.getElement() == SpiritElement.LIGHT_SPIRIT) {
+        if (event.getElement() == SpiritElement.DARK || event.getElement() == SpiritElement.LIGHT) {
             BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(event.getTarget());
 
             if (event.getResult() == Result.REMOVE) {
                 boolean removeSpirit = true;
                 for (Element existing : bPlayer.getElements()) {
-                    if (existing != event.getElement() && (existing == SpiritElement.DARK_SPIRIT || existing == SpiritElement.LIGHT_SPIRIT)) {
+                    if (existing != event.getElement() && (existing == SpiritElement.DARK || existing == SpiritElement.LIGHT)) {
                         removeSpirit = false;
                         break;
                     }
                 }
                 if (removeSpirit) {
-                    bPlayer.getElements().remove(SpiritElement.SPIRIT);
+                    bPlayer.getElements().remove(SpiritElement.NEUTRAL);
                 }
             } else if (event.getResult() == Result.ADD || event.getResult() == Result.CHOOSE) {
                 boolean addSpirit = true;
                 for (Element existing : bPlayer.getElements()) {
-                    if (existing != event.getElement() && (existing == SpiritElement.DARK_SPIRIT || existing == SpiritElement.LIGHT_SPIRIT)) {
+                    if (existing != event.getElement() && (existing == SpiritElement.DARK || existing == SpiritElement.LIGHT)) {
                         addSpirit = false;
                         break;
                     }
                 }
                 if (addSpirit) {
-                    bPlayer.getElements().add(SpiritElement.SPIRIT);
+                    bPlayer.getElements().add(SpiritElement.NEUTRAL);
                 }
             }
 
@@ -76,9 +75,9 @@ public class PKEvents implements Listener {
             GeneralMethods.saveElements(bPlayer);
 
 
-        } else if (event.getElement() == SpiritElement.SPIRIT && event.getResult() == Result.CHOOSE) {
+        } else if (event.getElement() == SpiritElement.NEUTRAL && event.getResult() == Result.CHOOSE) {
             BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(event.getTarget());
-            bPlayer.getElements().remove(SpiritElement.SPIRIT);
+            bPlayer.getElements().remove(SpiritElement.NEUTRAL);
             String s = Spirits.getInstance().getConfig().getString("Language.Errors.ChooseSpirit");
             if (!StringUtils.isEmpty(s)) GeneralMethods.sendBrandingMessage(event.getTarget(), s);
             GeneralMethods.saveElements(bPlayer);
@@ -97,14 +96,14 @@ public class PKEvents implements Listener {
         if (bPlayer != null) {
             avatar = Methods.isAvatar(bPlayer);
             elements = new ArrayList<>(bPlayer.getElements());
-            elements.remove(SpiritElement.SPIRIT);
+            elements.remove(SpiritElement.NEUTRAL);
             if (avatar) {
                 c = Element.AVATAR.getColor();
                 e = Element.AVATAR.getName();
-            } else if (elements.size() == 2 && bPlayer.hasElement(SpiritElement.DARK_SPIRIT)
-                    && bPlayer.hasElement(SpiritElement.LIGHT_SPIRIT)) {
-                c = SpiritElement.SPIRIT.getColor();
-                e = SpiritElement.SPIRIT.getName();
+            } else if (elements.size() == 2 && bPlayer.hasElement(SpiritElement.DARK)
+                    && bPlayer.hasElement(SpiritElement.LIGHT)) {
+                c = SpiritElement.NEUTRAL.getColor();
+                e = SpiritElement.NEUTRAL.getName();
             } else if (elements.size() > 0) {
                 c = elements.get(0).getColor();
                 e = elements.get(0).getName();

@@ -15,7 +15,6 @@ import com.projectkorra.projectkorra.util.ParticleEffect;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.LightAbility;
 
 public class Shelter extends LightAbility {
@@ -226,9 +225,8 @@ public class Shelter extends LightAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.LIGHT, "Defense") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.Shelter.Description");
+    public String getAbilityType() {
+        return DEFENSE;
     }
 
     @Override

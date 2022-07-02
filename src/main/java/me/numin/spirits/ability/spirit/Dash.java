@@ -37,6 +37,11 @@ public class Dash extends SpiritAbility {
 
     }
 
+    @Override
+    public String getAbilityType() {
+        return MOBILITY;
+    }
+
     private void setFields() {
         this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral." + getName() + ".Dash.Cooldown");
         this.distance = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral." + getName() + ".Dash.Distance");

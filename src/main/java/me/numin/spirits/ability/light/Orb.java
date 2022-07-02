@@ -17,7 +17,6 @@ import com.projectkorra.projectkorra.util.ParticleEffect;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.LightAbility;
 
 import java.util.ArrayList;
@@ -189,9 +188,8 @@ public class Orb extends LightAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.LIGHT, "Offense") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.Orb.Description");
+    public String getAbilityType() {
+        return OFFENSE;
     }
 
     @Override

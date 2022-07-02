@@ -3,30 +3,18 @@ package me.numin.spirits.utilities;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.numin.spirits.Spirits;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
+import me.numin.spirits.SpiritElement;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.Element;
 
 public class Methods {
-
-    /**
-     * The types of Spirits in the plugin.
-     */
-    public enum SpiritType {
-        DARK, LIGHT, NEUTRAL
-    }
 
     /**
      * Used to move a location in a certain direction.
@@ -70,43 +58,6 @@ public class Methods {
     }
 
     /**
-     * Used to create an inventory item.
-     *
-     * @param icon The item which displays in a players inventory.
-     * @param name The name of the item.
-     * @param color The color that the name displays in.
-     * @return The item.
-     */
-    public static ItemStack createItem(Material icon, String name, ChatColor color) {
-        ItemStack item = new ItemStack(icon);
-        ItemMeta itemMeta = item.getItemMeta();
-
-        assert itemMeta != null;
-        itemMeta.setDisplayName(color + name);
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-    /**
-     * Used to create an inventory item with a lore.
-     *
-     * @param icon The item which displays in a players inventory.
-     * @param name The name of the item.
-     * @param color The color that the name displays in.
-     * @param description The lore of the item.
-     * @return The item.
-     */
-    public static ItemStack createItem(Material icon, String name, ChatColor color, List<String> description) {
-        ItemStack item = createItem(icon, name, color);
-        ItemMeta meta = item.getItemMeta();
-
-        assert meta != null;
-        meta.setLore(description);
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    /**
      * Used to create some polygon at a location.
      *
      * @param location Center point for the polygon.
@@ -133,22 +84,19 @@ public class Methods {
      * @param player The player being tested.
      * @return The type of spirit they are, null if they aren't a spirit.
      */
-    public static SpiritType getSpiritType(Player player) {
+    public static SpiritElement getSpiritType(Player player) {
         BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
-        Element spirit = Element.getElement("Spirit"),
-                lightSpirit = Element.getElement("LightSpirit"),
-                darkSpirit = Element.getElement("DarkSpirit");
 
         if (bPlayer == null) return null;
 
-        if (bPlayer.hasElement(lightSpirit) && bPlayer.hasElement(darkSpirit)) {
-            return SpiritType.NEUTRAL;
-        } else if (bPlayer.hasElement(lightSpirit)) {
-            return SpiritType.LIGHT;
-        } else if (bPlayer.hasElement(darkSpirit)) {
-            return SpiritType.DARK;
-        } else if (bPlayer.hasElement(spirit)) {
-            return SpiritType.NEUTRAL;
+        if (bPlayer.hasElement(SpiritElement.LIGHT) && bPlayer.hasElement(SpiritElement.DARK)) {
+            return SpiritElement.NEUTRAL;
+        } else if (bPlayer.hasElement(SpiritElement.LIGHT)) {
+            return SpiritElement.LIGHT;
+        } else if (bPlayer.hasElement(SpiritElement.DARK)) {
+            return SpiritElement.DARK;
+        } else if (bPlayer.hasElement(SpiritElement.NEUTRAL)) {
+            return SpiritElement.NEUTRAL;
         } else {
             return null;
         }
@@ -165,22 +113,19 @@ public class Methods {
      * @param speed The particle speed.
      * @param amount The amount of particles to display.
      */
-    public static void playSpiritParticles(SpiritType spiritType, Location location, double x, double y, double z, double speed, int amount) {
-        DustOptions teal = new DustOptions(Color.fromRGB(0, 176, 180), 1),
+    public static void playSpiritParticles(SpiritElement spiritType, Location location, double x, double y, double z, double speed, int amount) {
+        /*DustOptions teal = new DustOptions(Color.fromRGB(0, 176, 180), 1),
                 white = new DustOptions(Color.fromRGB(255, 255,255), 1),
-                black = new DustOptions(Color.fromRGB(0, 0, 0), 1);
+                black = new DustOptions(Color.fromRGB(0, 0, 0), 1);*/
 
-        if (spiritType == SpiritType.NEUTRAL) {
+        if (spiritType == SpiritElement.NEUTRAL) {
             location.getWorld().spawnParticle(Particle.CRIT_MAGIC, location, amount, x, y, z, speed);
-            location.getWorld().spawnParticle(Particle.REDSTONE, location, amount, x, y, z, speed, teal);
-        } else if (spiritType == SpiritType.DARK) {
+        } else if (spiritType == SpiritElement.DARK) {
             location.getWorld().spawnParticle(Particle.SPELL_WITCH, location, amount, x, y, z, speed);
-            location.getWorld().spawnParticle(Particle.REDSTONE, location, amount, x, y, z, speed, black);
-
-        } else if (spiritType == SpiritType.LIGHT) {
+        } else if (spiritType == SpiritElement.LIGHT) {
             location.getWorld().spawnParticle(Particle.SPELL_INSTANT, location, amount, x, y, z, speed);
-            location.getWorld().spawnParticle(Particle.REDSTONE, location, amount, x, y, z, speed, white);
         }
+        location.getWorld().spawnParticle(Particle.REDSTONE, location, amount, x, y, z, speed, new DustOptions(spiritType.getDustColor(), 2));
     }
 
     /**
@@ -196,7 +141,7 @@ public class Methods {
      * @param amount The amount of particles to display.
      */
     public static void playSpiritParticles(Player player, Location location, double x, double y, double z, double speed, int amount) {
-        SpiritType spiritType = getSpiritType(player);
+        SpiritElement spiritType = getSpiritType(player);
         if (spiritType == null) return;
         playSpiritParticles(spiritType, location, x, y, z, speed, amount);
     }
@@ -229,44 +174,6 @@ public class Methods {
     }
 
     /**
-     * Used to get a ChatColor based on SpiritType.
-     *
-     * @param spiritType The SpiritType being tested.
-     * @return The correct chat color.
-     */
-    public static ChatColor getSpiritColor(SpiritType spiritType) {
-        switch (spiritType) {
-            case NEUTRAL: return ChatColor.BLUE;
-            case LIGHT: return ChatColor.AQUA;
-            case DARK: return ChatColor.DARK_GRAY;
-            default: return null;
-        }
-    }
-
-    /**
-     * Used to create a string with the generic Spirits
-     * formatting.
-     *
-     * @param spiritType The type of Spirit colors to use.
-     * @param abilityType The header for the description.
-     * @return The new description.
-     */
-    public static String setSpiritDescription(SpiritType spiritType, String abilityType) {
-        ChatColor titleColor = getSpiritColor(spiritType);
-        ChatColor descColor = null;
-
-        switch (spiritType) {
-            case NEUTRAL: descColor = ChatColor.DARK_AQUA;
-            break;
-            case LIGHT: descColor = ChatColor.WHITE;
-            break;
-            case DARK: descColor = ChatColor.BLUE;
-            break;
-        }
-        return titleColor + "" + ChatColor.BOLD + abilityType + ": " + descColor;
-    }
-
-    /**
      * Checks if the player is the avatar. This is a hotfix so players with both
      * a spirit element and a light/dark spirit element don't appear as the avatar
      * because they "have more than one element"
@@ -277,11 +184,11 @@ public class Methods {
         if (player.getPlayer().hasPermission("bending.avatar")) return true;
         if (player.getElements().size() > 1) {
             List<Element> clonedElements = new ArrayList<>(player.getElements());
-            clonedElements.remove(SpiritElement.SPIRIT);
+            clonedElements.remove(SpiritElement.NEUTRAL);
 
             //People with both shouldnt return true
-            if (clonedElements.size() == 2 && player.hasElement(SpiritElement.DARK_SPIRIT)
-                    && player.hasElement(SpiritElement.LIGHT_SPIRIT)) return false;
+            if (clonedElements.size() == 2 && player.hasElement(SpiritElement.DARK)
+                    && player.hasElement(SpiritElement.LIGHT)) return false;
 
             return clonedElements.size() > 1;
         }

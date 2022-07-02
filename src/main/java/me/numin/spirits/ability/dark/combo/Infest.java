@@ -11,8 +11,8 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.DarkAbility;
+import me.numin.spirits.SpiritElement;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -56,6 +56,11 @@ public class Infest extends DarkAbility implements ComboAbility {
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 0.3F, -1);
         start();
         bPlayer.addCooldown(this);
+    }
+
+    @Override
+    public String getAbilityType() {
+        return OFFENSE;
     }
 
     private void setFields() {
@@ -113,7 +118,7 @@ public class Infest extends DarkAbility implements ComboAbility {
                 double y = 0.4 * counter;
                 double z = 0.5 * (Math.PI * 4 - counter) * Math.sin(counter - i);
                 location.add(x, y, z);
-                Methods.playSpiritParticles(SpiritType.DARK, location, 0, 0, 0, 0, 1);
+                Methods.playSpiritParticles(SpiritElement.DARK, location, 0, 0, 0, 0, 1);
                 player.getWorld().spawnParticle(Particle.REDSTONE, location, 1, 0.1, 0.1, 0.1, 0, new DustOptions(Color.fromBGR(100, 100, 100), 1));
                 location.subtract(x, y, z);
             }
@@ -190,12 +195,6 @@ public class Infest extends DarkAbility implements ComboAbility {
     @Override
     public String getName() {
         return "Infest";
-    }
-
-    @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.DARK, "Combo") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.Infest.Description");
     }
 
     @Override

@@ -11,8 +11,8 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.LightAbility;
+import me.numin.spirits.SpiritElement;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -113,7 +113,7 @@ public class Rejuvenate extends LightAbility implements ComboAbility {
                 double y = 0.4 * counter;
                 double z = 0.5 * (Math.PI * 4 - counter) * Math.sin(counter - i);
                 location.add(x, y, z);
-                Methods.playSpiritParticles(SpiritType.LIGHT, location, 0, 0, 0, 0, 1);
+                Methods.playSpiritParticles(SpiritElement.LIGHT, location, 0, 0, 0, 0, 1);
                 player.getWorld().spawnParticle(Particle.REDSTONE, location, 1, 0.1, 0.1, 0.1, 0, new DustOptions(Color.fromBGR(255, 255, 255), 1));
                 location.subtract(x, y, z);
             }
@@ -189,9 +189,8 @@ public class Rejuvenate extends LightAbility implements ComboAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.LIGHT, "Combo") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.Rejuvenate.Description");
+    public String getAbilityType() {
+        return UTILITY;
     }
 
     @Override

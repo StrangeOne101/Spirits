@@ -4,7 +4,6 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.attribute.Attribute;
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.DarkAbility;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -49,6 +48,11 @@ public class Shackle extends DarkAbility {
         setFields();
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDER_EYE_DEATH, 1, -1);
         start();
+    }
+
+    @Override
+    public String getAbilityType() {
+        return DEFENSE;
     }
 
     private void setFields() {
@@ -175,12 +179,6 @@ public class Shackle extends DarkAbility {
     @Override
     public String getName() {
         return "Shackle";
-    }
-
-    @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.DARK, "Defense") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.Shackle.Description");
     }
 
     @Override

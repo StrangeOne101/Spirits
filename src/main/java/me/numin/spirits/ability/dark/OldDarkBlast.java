@@ -239,9 +239,8 @@ public class OldDarkBlast extends DarkAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(Methods.SpiritType.DARK, "Offense") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.OldDarkBlast.Description");
+    public String getAbilityType() {
+        return OFFENSE;
     }
 
     @Override

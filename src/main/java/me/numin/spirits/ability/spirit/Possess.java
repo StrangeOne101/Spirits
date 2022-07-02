@@ -22,7 +22,6 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.SpiritAbility;
 import org.bukkit.util.Vector;
 
@@ -210,9 +209,8 @@ public class Possess extends SpiritAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.NEUTRAL, "Offense") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.Description");
+    public String getAbilityType() {
+        return OFFENSE;
     }
 
     @Override

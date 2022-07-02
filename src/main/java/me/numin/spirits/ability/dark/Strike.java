@@ -14,7 +14,6 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.DarkAbility;
 
 public class Strike extends DarkAbility {
@@ -120,9 +119,8 @@ public class Strike extends DarkAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.DARK, "Offense") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.Strike.Description");
+    public String getAbilityType() {
+        return OFFENSE;
     }
 
     @Override

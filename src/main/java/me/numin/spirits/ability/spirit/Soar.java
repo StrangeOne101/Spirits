@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.SpiritAbility;
 
 public class Soar extends SpiritAbility {
@@ -86,9 +85,8 @@ public class Soar extends SpiritAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.NEUTRAL, "Mobility") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Agility.Description");
+    public String getAbilityType() {
+        return MOBILITY;
     }
 
     @Override

@@ -3,6 +3,7 @@ package me.numin.spirits.utilities;
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.Element;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.numin.spirits.SpiritElement;
 import me.numin.spirits.Spirits;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ public class SpiritPlaceholder extends PlaceholderExpansion {
         }
 
         List<Element> elements = new ArrayList<>(bPlayer.getElements());
-        elements.remove(SpiritElement.SPIRIT);
+        elements.remove(SpiritElement.NEUTRAL);
 
         if (params.equals("element") || params.equals("elementcolor")) {
             String e = "Nonbender";
@@ -34,10 +35,10 @@ public class SpiritPlaceholder extends PlaceholderExpansion {
             if (Methods.isAvatar(bPlayer)) {
                 c = Element.AVATAR.getColor();
                 e = Element.AVATAR.getName();
-            } else if (elements.size() == 2 && bPlayer.hasElement(SpiritElement.DARK_SPIRIT)
-                    && bPlayer.hasElement(SpiritElement.LIGHT_SPIRIT)) {
-                c = SpiritElement.SPIRIT.getColor();
-                e = SpiritElement.SPIRIT.getName();
+            } else if (elements.size() == 2 && bPlayer.hasElement(SpiritElement.DARK)
+                    && bPlayer.hasElement(SpiritElement.LIGHT)) {
+                c = SpiritElement.NEUTRAL.getColor();
+                e = SpiritElement.NEUTRAL.getName();
             } else if (elements.size() > 0) {
                 c = elements.get(0).getColor();
                 e = elements.get(0).getName();

@@ -254,9 +254,8 @@ public class OldLightBlast extends LightAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(Methods.SpiritType.LIGHT, "Offense / Utility") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.LightSpirit.OldLightBlast.Description");
+    public String getAbilityType() {
+        return OFFENSE;
     }
 
     @Override

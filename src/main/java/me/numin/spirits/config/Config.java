@@ -1,6 +1,6 @@
 package me.numin.spirits.config;
 
-import me.numin.spirits.utilities.SpiritElement;
+import me.numin.spirits.SpiritElement;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.projectkorra.projectkorra.configuration.ConfigManager;
@@ -21,11 +21,11 @@ public class Config {
         FileConfiguration language = ConfigManager.languageConfig.get();
 
         //Rank configuration
-        language.addDefault("Chat.Colors.Spirit", SpiritElement.SPIRIT.getDefaultColor().name());
+        language.addDefault("Chat.Colors.Spirit", SpiritElement.NEUTRAL.getDefaultColor().name());
         language.addDefault("Chat.Colors.SpiritSub", "DARK_PURPLE");
-        language.addDefault("Chat.Colors.LightSpirit", SpiritElement.LIGHT_SPIRIT.getDefaultColor().name());
+        language.addDefault("Chat.Colors.LightSpirit", SpiritElement.LIGHT.getDefaultColor().name());
         language.addDefault("Chat.Colors.LightSpiritSub", "WHITE");
-        language.addDefault("Chat.Colors.DarkSpirit", SpiritElement.DARK_SPIRIT.getDefaultColor().name());
+        language.addDefault("Chat.Colors.DarkSpirit", SpiritElement.DARK.getDefaultColor().name());
         language.addDefault("Chat.Colors.DarkSpiritSub", "DARK_GRAY");
         language.addDefault("Chat.Prefixes.Spirit", "[Spirit]");
         language.addDefault("Chat.Prefixes.LightSpirit", "[LightSpirit]");

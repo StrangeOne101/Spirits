@@ -20,7 +20,6 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
-import me.numin.spirits.utilities.Methods.SpiritType;
 import me.numin.spirits.ability.api.DarkAbility;
 
 public class Intoxicate extends DarkAbility {
@@ -60,6 +59,11 @@ public class Intoxicate extends DarkAbility {
             this.target = (LivingEntity) targetEntity;
             start();
         }
+    }
+
+    @Override
+    public String getAbilityType() {
+        return OFFENSE;
     }
 
     private void setFields() {
@@ -182,12 +186,6 @@ public class Intoxicate extends DarkAbility {
     @Override
     public String getName() {
         return "Intoxicate";
-    }
-
-    @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.DARK, "Offense") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.DarkSpirit.Intoxicate.Description");
     }
 
     @Override
