@@ -142,9 +142,8 @@ public class Levitation extends SpiritAbility implements ComboAbility {
     }
 
     @Override
-    public String getDescription() {
-        return Methods.setSpiritDescription(SpiritType.NEUTRAL, "Combo") +
-                Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Levitation.Description");
+    public String getAbilityType() {
+        return UTILITY;
     }
 
     @Override
