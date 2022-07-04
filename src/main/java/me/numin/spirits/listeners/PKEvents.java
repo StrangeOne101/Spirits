@@ -8,11 +8,13 @@ import com.projectkorra.projectkorra.configuration.ConfigManager;
 import com.projectkorra.projectkorra.event.BendingReloadEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent.Result;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
+import com.projectkorra.projectkorra.storage.DBConnection;
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.SpiritElement;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
@@ -24,6 +26,7 @@ import org.bukkit.plugin.RegisteredListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -47,7 +50,7 @@ public class PKEvents implements Listener {
         if (event.getElement() == SpiritElement.DARK || event.getElement() == SpiritElement.LIGHT) {
             BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(event.getTarget());
 
-            if (event.getResult() == Result.REMOVE) {
+            if (event.getResult() == Result.REMOVE || event.getResult() == Result.PERMAREMOVE) {
                 boolean removeSpirit = true;
                 for (Element existing : bPlayer.getElements()) {
                     if (existing != event.getElement() && (existing == SpiritElement.DARK || existing == SpiritElement.LIGHT)) {
@@ -72,7 +75,7 @@ public class PKEvents implements Listener {
             }
 
             GeneralMethods.removeUnusableAbilities(bPlayer.getName());
-            GeneralMethods.saveElements(bPlayer);
+            saveElements(bPlayer); //Use our own method due to async syncing causing the player's normal spirit element not to be saved
 
 
         } else if (event.getElement() == SpiritElement.NEUTRAL && event.getResult() == Result.CHOOSE) {
@@ -80,7 +83,7 @@ public class PKEvents implements Listener {
             bPlayer.getElements().remove(SpiritElement.NEUTRAL);
             String s = Spirits.getInstance().getConfig().getString("Language.Errors.ChooseSpirit");
             if (!StringUtils.isEmpty(s)) GeneralMethods.sendBrandingMessage(event.getTarget(), s);
-            GeneralMethods.saveElements(bPlayer);
+            saveElements(bPlayer);
         }
     }
 
@@ -141,5 +144,19 @@ public class PKEvents implements Listener {
             e.printStackTrace();
             event.getSender().sendMessage(ChatColor.RED + "Failed to load the Spirits config: " + e.getLocalizedMessage());
         }
+    }
+
+    private void saveElements(BendingPlayer bPlayer) {
+        Bukkit.getScheduler().runTaskAsynchronously(Spirits.plugin, () -> {
+            try {
+                DBConnection.sql.getConnection().setAutoCommit(false);
+                DBConnection.sql.getConnection().commit(); //Force the existing async stuff to commit
+                GeneralMethods.saveElements(bPlayer);
+                DBConnection.sql.getConnection().commit(); //Commit our element change
+                DBConnection.sql.getConnection().setAutoCommit(true); //Turn autosync back on
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

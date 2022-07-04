@@ -8,8 +8,8 @@ import org.bukkit.Color;
 public class SpiritElement extends Element {
 
     public static final SpiritElement NEUTRAL = new SpiritElement("Spirit", ChatColor.DARK_AQUA, "Neutral", 0x408fff);
-    public static final SpiritElement LIGHT = new SpiritElement("LightSpirit", ChatColor.AQUA, "Light", 0xfffa63);
-    public static final SpiritElement DARK = new SpiritElement("DarkSpirit", ChatColor.BLUE, "Dark", 0x4f00cf);
+    public static final SpiritElement LIGHT = new SpiritElement("LightSpirit", ChatColor.AQUA, "LightSpirit", 0xfffa63);
+    public static final SpiritElement DARK = new SpiritElement("DarkSpirit", ChatColor.BLUE, "DarkSpirit", 0x4f00cf);
 
     private ChatColor defaultColor;
     private String configName;

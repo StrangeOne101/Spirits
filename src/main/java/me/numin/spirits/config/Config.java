@@ -38,12 +38,16 @@ public class Config {
         config.addDefault("Language.Abilities.Spirit.Levitation.Description", "Spirits lack any earthly tethers which allow themselves to detach and enter the void, empty and become wind. Using this combo takes a toll on your essence and may weaken your mobility for a time.");
         config.addDefault("Language.Abilities.Spirit.Levitation.Instructions", "Agility (Left-click) > Agility (Hold shift) > Vanish (Left-click)");
 
-        config.addDefault("Language.Abilities.Spirit.Possess.Description", "A very ancient ability of Spirits is the ability to jump inside the body of a human. As a Spirit, you'll be able to possess a human for a short amount of time and do harm. While this ability is active, both the Spirits and the targets movement will be hindered.");
-        config.addDefault("Language.Abilities.Spirit.Possess.Instructions", "Hold shift and look at a human.");
+        config.addDefault("Language.Abilities.Spirit.Possess.Description", "Allows the spirit to possess the body of a human. Successful possession will slow the target and damage them, but if the target fights back, they can break possession and harm the possessor");
+        config.addDefault("Language.Abilities.Spirit.Possess.Instructions", "Hold shift and look at a player/mob");
         config.addDefault("Language.Abilities.Spirit.Possess.Possessed", "&9** Possessed **");
         config.addDefault("Language.Abilities.Spirit.Possess.PossessionBroken", "&9** Possession Broken **");
         language.addDefault("Abilities.Spirit.Possess.DeathMessage", "{victim} succumbed to {attacker}'s possession");
         language.addDefault("Abilities.Spirit.PossessRecoil.DeathMessage", "{victim} failed to possess {attacker}");
+
+        config.addDefault("Language.Abilities.Spirit.SpiritBlast.Description", "Release multiple blasts of spirit energy in quick succession that damages all enemies they come across");
+        config.addDefault("Language.Abilities.Spirit.Possess.Instructions", "Left-Click (Multiple): Release Spirit Blast | Tap Sneak: Redirect");
+        language.addDefault("Abilities.Spirit.SpiritBlast.DeathMessage", "{victim} was torn apart by {attacker}'s {ability}");
 
 
         config.addDefault("Language.Abilities.Spirit.Phase.Description", "This advanced combo allows a Spirit to dematerialize into a state where they can walk through walls and fly around a certain radius. They are able to do this because of their unqiue molecular makeup not seen in any other being!");
@@ -93,13 +97,25 @@ public class Config {
 
         config.addDefault("Abilities.Spirits.Neutral.Possess.Enabled", true);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Cooldown", 5000);
-        config.addDefault("Abilities.Spirits.Neutral.Possess.Range", 5);
+        config.addDefault("Abilities.Spirits.Neutral.Possess.Range", 12);
         config.addDefault("Abilities.Spirits.Neutral.Possess.MinDamage", 2);
         config.addDefault("Abilities.Spirits.Neutral.Possess.MaxDamage", 6);
         config.addDefault("Abilities.Spirits.Neutral.Possess.FailureSelfDamage", 6);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Duration", 4000);
+        config.addDefault("Abilities.Spirits.Neutral.Possess.Speed", 0.8D);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Durability", 8);
-        config.addDefault("Abilities.Spirits.Neutral.Possess.ChargeTime", 2000);
+        config.addDefault("Abilities.Spirits.Neutral.Possess.ChargeTime", 1400);
+
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Enabled", true);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Cooldown", 9000);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Range", 50);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Damage", 2);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.MaxBlasts", 3);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Duration", 3000);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Speed", 1.2D);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Radius", 0.3D);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.CanRedirect", true);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.CanAlwaysRedirect", false);
 
         config.addDefault("Abilities.Spirits.Neutral.Vanish.Enabled", true);
         config.addDefault("Abilities.Spirits.Neutral.Vanish.Cooldown", 7000);

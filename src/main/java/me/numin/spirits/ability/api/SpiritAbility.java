@@ -28,7 +28,14 @@ public abstract class SpiritAbility extends ElementalAbility implements AddonAbi
 
     @Override
     public boolean isEnabled() {
-        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits." + ((SpiritElement)this.getElement()).getConfigName() + "." + getName() + ".Enabled");
+        String combo = this instanceof ComboAbility ? ".Combo" : "";
+        SpiritElement se = ((SpiritElement)this.getElement());
+        if (se == null) {
+            System.out.println("Null on " + getName());
+            return false;
+        }
+        //System.out.println("Abilities.Spirits." + se.getConfigName() + combo + "." + getName() + ".Enabled");
+        return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits." + se.getConfigName() + combo + "." + getName() + ".Enabled");
     }
 
     @Override

@@ -72,11 +72,11 @@ public class Abilities implements Listener {
             if (bPlayer.isOnCooldown("Soar")) return;
             new Soar(player);
 
-        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Possess") &&
-                !event.isSneaking() &&
-                !CoreAbility.hasAbility(player, Possess.class)) {
-            new Possess(player);
-
+        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Possess")) {
+            if (event.isSneaking()) {
+                if (!CoreAbility.hasAbility(player, Possess.class)) new Possess(player);
+                else if (Possess.stopSpectating(event.getPlayer())) event.setCancelled(true);
+            }
         } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Shelter") && !CoreAbility.hasAbility(player, Shelter.class)) {
             new Shelter(player, ShelterType.SHIFT);
 
@@ -100,10 +100,11 @@ public class Abilities implements Listener {
         Player player = event.getPlayer();
         BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
 
-        if (event.isCancelled() || bPlayer == null) {
+        if (bPlayer == null) {
             return;
         }
-        if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Vanish")) {
+        if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Vanish")
+                || bPlayer.getBoundAbilityName().equalsIgnoreCase("Possess")) {
             if (event.getCause() == TeleportCause.SPECTATE) {
                 event.setCancelled(true);
             }

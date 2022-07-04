@@ -4,7 +4,7 @@ main: me.numin.spirits.Spirits
 api-version: 1.15
 depend: [ProjectKorra]
 softdepend: [PlaceholderAPI]
-authors: [Numin]
+authors: [Numin, StrangeOne101]
 description: Enables your players to be Spirits.
 
 permissions:
