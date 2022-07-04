@@ -59,9 +59,9 @@ public class Config {
         config.addDefault("Language.Abilities.LightSpirit.Alleviate.Description", "The healing ability for LightSpirits, this allows you to heal yourself and others! When healing, whoever is being healed will be removed of ANY negative potion effects aswell as recieve regeneration for a period of time.");
         config.addDefault("Language.Abilities.LightSpirit.Alleviate.Instructions", "Hold Shift while lookat at a target: Heal them ⏐ Hold Shift while looking away: Heal yourself.");
 
-        config.addDefault("Language.Abilities.LightSpirit.OldLightBlast.Description", "Shoot a radiating blast of light towards your opponent!");
-        config.addDefault("Language.Abilities.LightSpirit.OldLightBlast.Instructions", "Left-click to shoot the blast ⏐ Tap-shift to select a target then left-click to shoot a different kind of blast.");
-
+        /*config.addDefault("Language.Abilities.LightSpirit.LightBlast.Description", "Shoot a radiating blast of light towards your opponent!");
+        config.addDefault("Language.Abilities.LightSpirit.LightBlast.Instructions", "Left-click to shoot the blast ⏐ Tap-shift to select a target then left-click to shoot a different kind of blast.");
+*/
         config.addDefault("Language.Abilities.LightSpirit.Rejuvenate.Description", "After executing the combo sequence, you will mark the ground with positively charged spiritual energy for a duration of time. Entities can come to this location to heal themselves, but dark creatures must beware!");
         config.addDefault("Language.Abilities.LightSpirit.Rejuvenate.Instructions", "Alleviate (Shift down) > Alleviate (Right-Click block) > Alleviate (Release shift)");
 
@@ -74,9 +74,9 @@ public class Config {
         config.addDefault("Language.Abilities.LightSpirit.Shelter.Description", "A very useful tactic when group battling, a light spirit can temporarily shield a friend or even a foe from incoming enemies. Additionally, they have the options to shield themselves!");
         config.addDefault("Language.Abilities.LightSpirit.Shelter.Instructions", "Left click: Shield others ⏐ Hold shift: Shield yourself.");
 
-        config.addDefault("Language.Abilities.DarkSpirit.OldDarkBlast.Description", "A basic offensive ability for DarkSpirits. You have the choice of shooting a basic blast for dealing quick damage. Or you can select a target and shoot a slower, powerful, homing blast. The blasts can be dodged and obstructed so be strategic!");
-        config.addDefault("Language.Abilities.DarkSpirit.OldDarkBlast.Instructions", "Left click: Quick blast ⏐ Tap-shift while looking at an entity: Select entity > Hold shift: Move the homing blast.");
-
+        /*config.addDefault("Language.Abilities.DarkSpirit.DarkBlast.Description", "A basic offensive ability for DarkSpirits. You have the choice of shooting a basic blast for dealing quick damage. Or you can select a target and shoot a slower, powerful, homing blast. The blasts can be dodged and obstructed so be strategic!");
+        config.addDefault("Language.Abilities.DarkSpirit.DarkBlast.Instructions", "Left click: Quick blast ⏐ Tap-shift while looking at an entity: Select entity > Hold shift: Move the homing blast.");
+*/
         config.addDefault("Language.Abilities.DarkSpirit.Infest.Description", "After executing the combo sequence, you will mark the ground with negatively charged spiritual energy for a duration of time. Monsters can come to this location for strength, but any other entities must beware!");
         config.addDefault("Language.Abilities.DarkSpirit.Infest.Instructions", "Intoxicate (Shift down) > Intoxicate (Right-Click block) > Intoxicate (Release shift)");
 
@@ -165,19 +165,19 @@ public class Config {
         config.addDefault("Abilities.Spirits.LightSpirit.Alleviate.ParticleColor.Blue", 255);
 
         //TODO: Re-enable when finalized
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.Enabled", false);
+        /*config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Enabled", false);
         //TODO: Define a cooldown
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.Cooldown", 0);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.Controllable", false);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.Damage", 2);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.Range", 10);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.SelectionDuration", 2000);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.PotionDuration", 10);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.PotionPower", 1);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.FirstBlastSpeed", 1);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.SecondBlastSpeed", 0.2);
-        config.addDefault("Abilities.Spirits.LightSpirit.OldLightBlast.BlastRadius", 2);
-
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Cooldown", 0);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Controllable", false);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Damage", 2);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Range", 10);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.SelectionDuration", 2000);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.PotionDuration", 10);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.PotionPower", 1);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.FirstBlastSpeed", 1);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.SecondBlastSpeed", 0.2);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.BlastRadius", 2);
+*/
         config.addDefault("Abilities.Spirits.LightSpirit.Orb.Enabled", true);
         config.addDefault("Abilities.Spirits.LightSpirit.Orb.Cooldown", 10000);
         config.addDefault("Abilities.Spirits.LightSpirit.Orb.ChargeTime", 2000);
@@ -235,18 +235,18 @@ public class Config {
         config.addDefault("Abilities.Spirits.DarkSpirit.Intoxicate.Potions.ConfusionPower", 1);
 
         //TODO: Re-enable when finalized
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.Enabled", false);
+       /* config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Enabled", false);
         //TODO: Define a cooldown amount.
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.Cooldown", 0);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.Controllable", false);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.Damage", 4);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.Range", 10);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.DurationOfSelection", 2000);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.PotionDuration", 5);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.PotionPower", 1);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.FirstBlastSpeed", 1);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.SecondBlastSpeed", 0.2);
-        config.addDefault("Abilities.Spirits.DarkSpirit.OldDarkBlast.BlastRadius", 2);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Cooldown", 0);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Controllable", false);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Damage", 4);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Range", 10);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.DurationOfSelection", 2000);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.PotionDuration", 5);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.PotionPower", 1);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.FirstBlastSpeed", 1);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.SecondBlastSpeed", 0.2);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.BlastRadius", 2);*/
 
         config.addDefault("Abilities.Spirits.DarkSpirit.Shackle.Enabled", true);
         config.addDefault("Abilities.Spirits.DarkSpirit.Shackle.Cooldown", 5000);

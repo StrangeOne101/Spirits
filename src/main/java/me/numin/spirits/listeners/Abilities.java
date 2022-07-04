@@ -1,8 +1,8 @@
 package me.numin.spirits.listeners;
 
 import com.projectkorra.projectkorra.ability.CoreAbility;
-import me.numin.spirits.ability.dark.OldDarkBlast;
-import me.numin.spirits.ability.light.OldLightBlast;
+import me.numin.spirits.ability.dark.DarkBlast;
+import me.numin.spirits.ability.light.LightBlast;
 import me.numin.spirits.ability.spirit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,12 +46,14 @@ public class Abilities implements Listener {
         } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Strike")) {
             new Strike(player);
 
-        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("OldLightBlast") && !CoreAbility.hasAbility(player, OldLightBlast.class)) {
-            new OldLightBlast(player, OldLightBlast.LightBlastType.CLICK);
+        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("LightBlast") && !CoreAbility.hasAbility(player, LightBlast.class)) {
+            new LightBlast(player, LightBlast.LightBlastType.CLICK);
 
-        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("OldDarkBlast") && !CoreAbility.hasAbility(player, OldDarkBlast.class)) {
-            new OldDarkBlast(player, OldDarkBlast.DarkBlastType.CLICK);
+        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("DarkBlast") && !CoreAbility.hasAbility(player, DarkBlast.class)) {
+            new DarkBlast(player, DarkBlast.DarkBlastType.CLICK);
 
+        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("SpiritBlast")) {
+            new SpiritBlast(player);
         }
     }
 
@@ -86,11 +88,6 @@ public class Abilities implements Listener {
         } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Orb")) {
             new Orb(player);
 
-        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("OldLightBlast") &&  event.isSneaking()) {
-            new OldLightBlast(player, OldLightBlast.LightBlastType.SHIFT);
-
-        } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("OldDarkBlast") && event.isSneaking()) {
-            new OldDarkBlast(player, OldDarkBlast.DarkBlastType.SHIFT);
         }
     }
 

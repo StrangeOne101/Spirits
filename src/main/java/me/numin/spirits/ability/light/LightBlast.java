@@ -1,15 +1,14 @@
-package me.numin.spirits.ability.dark;
+package me.numin.spirits.ability.light;
 
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
-import me.numin.spirits.ability.api.DarkAbility;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.Spirits;
+import me.numin.spirits.ability.api.LightAbility;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Particle.DustOptions;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -18,50 +17,52 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public class OldDarkBlast extends DarkAbility {
+public class LightBlast extends LightAbility {
 
     //TODO: Add sounds.
 
-    private DustOptions black = new DustOptions(Color.fromRGB(0, 0, 0), 1);
-    private DustOptions purple = new DustOptions(Color.fromRGB(150, 0, 216), 1);
-    private LivingEntity target;
-    private DarkBlastType type;
+    private Particle.DustOptions white = new Particle.DustOptions(Color.fromRGB(255, 255, 255), 1);
+    private Particle.DustOptions pink = new Particle.DustOptions(Color.fromRGB(255, 160, 160), 1);
+    private Entity target;
+    private LightBlastType type;
     private Location blast, location, origin;
     private Vector direction, vector;
 
-    private boolean burst = true, canDamage, controllable, hasReached = false;
+    private boolean burst = true, canHeal, controllable, hasReached = false;
+    @Attribute(Attribute.DAMAGE)
+    private double damage;
+    @Attribute(Attribute.SPEED)
+    private double initialBlastSpeed;
     @Attribute(Attribute.RADIUS)
     private double blastRadius;
-    @Attribute(Attribute.DAMAGE)
-    private double damage, finalBlastSpeed, initialBlastSpeed;
+    @Attribute(Attribute.SPEED)
+    private double finalBlastSpeed;
     @Attribute(Attribute.RANGE)
     private double range;
     private int potionDuration, potionPower;
     @Attribute(Attribute.COOLDOWN)
-    private long cooldown;
+    private long cooldown, selectionDuration, time;
 
-    private long selectionDuration, time;
-
-    public enum DarkBlastType {
+    public enum LightBlastType {
         SHIFT, CLICK
     }
 
-    public OldDarkBlast(Player player, DarkBlastType type) {
+    public LightBlast(Player player, LightBlastType type) {
         super(player);
 
         if (!bPlayer.canBend(this)) return;
 
         if (type != null) this.type = type;
 
-        if (hasAbility(player, OldDarkBlast.class)) {
-            OldDarkBlast oldDarkBlast = getAbility(player, OldDarkBlast.class);
-            if (oldDarkBlast.target != null) {
+        if (hasAbility(player, LightBlast.class) && type == LightBlastType.SHIFT) {
+            LightBlast lightBlast = getAbility(player, LightBlast.class);
+            if (lightBlast.target != null) {
                 // Makes sure the player is looking at their target.
-                Entity targetEntity = GeneralMethods.getTargetedEntity(player, oldDarkBlast.range);
-                if (targetEntity == null || !targetEntity.equals(oldDarkBlast.target)) return;
+                Entity targetEntity = GeneralMethods.getTargetedEntity(player, lightBlast.range);
+                if (targetEntity == null || !targetEntity.equals(lightBlast.target)) return;
 
-                oldDarkBlast.location = player.getLocation().add(0, 1, 0);
-                oldDarkBlast.canDamage = true;
+                lightBlast.location = player.getLocation().add(0, 1, 0);
+                lightBlast.canHeal = true;
             }
         } else {
             setFields();
@@ -71,16 +72,16 @@ public class OldDarkBlast extends DarkAbility {
     }
 
     private void setFields() {
-        this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.DarkSpirit.OldDarkBlast.Cooldown");
-        this.controllable = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.DarkSpirit.OldDarkBlast.Controllable");
-        this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.Damage");
-        this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.Range");
-        this.selectionDuration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.DarkSpirit.OldDarkBlast.DurationOfSelection");
-        this.potionDuration = Spirits.plugin.getConfig().getInt("Abilities.Spirits.DarkSpirit.OldDarkBlast.PotionDuration");
-        this.potionPower = Spirits.plugin.getConfig().getInt("Abilities.Spirits.DarkSpirit.OldDarkBlast.PotionPower");
-        this.initialBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.FirstBlastSpeed");
-        this.blastRadius = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.BlastRadius");
-        this.finalBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.DarkSpirit.OldDarkBlast.SecondBlastSpeed");
+        this.cooldown = Spirits.plugin.getConfig().getLong("Abilities.Spirits.LightSpirit.LightBlast.Cooldown");
+        this.controllable = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.LightSpirit.LightBlast.Controllable");
+        this.damage = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.Damage");
+        this.range = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.Range");
+        this.selectionDuration = Spirits.plugin.getConfig().getLong("Abilities.Spirits.LightSpirit.LightBlast.SelectionDuration");
+        this.potionDuration = Spirits.plugin.getConfig().getInt("Abilities.Spirits.LightSpirit.LightBlast.PotionDuration");
+        this.potionPower = Spirits.plugin.getConfig().getInt("Abilities.Spirits.LightSpirit.LightBlast.PotionPower");
+        this.initialBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.FirstBlastSpeed");
+        this.blastRadius = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.BlastRadius");
+        this.finalBlastSpeed = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.LightSpirit.LightBlast.SecondBlastSpeed");
 
         this.direction = player.getLocation().getDirection();
         this.origin = player.getLocation().add(0, 1, 0);
@@ -88,27 +89,31 @@ public class OldDarkBlast extends DarkAbility {
 
         this.vector = new Vector(1, 0, 0);
 
-        this.canDamage = false;
+        this.canHeal = false;
     }
 
     @Override
     public void progress() {
-        if (player.isDead() || !player.isOnline() || location.getWorld() != player.getWorld() ||
-                GeneralMethods.isRegionProtectedFromBuild(player, player.getLocation())) {
+        if (!bPlayer.canBend(this)) {
             remove();
             return;
         }
 
-        if (type == DarkBlastType.CLICK) shootDamagingBlast();
-        else if (type == DarkBlastType.SHIFT) shootSelectionBlast();
+        if (type == LightBlastType.CLICK)
+            shootDamagingBlast();
+        else if (type == LightBlastType.SHIFT)
+            shootSelectionBlast();
 
         showSelectedTarget();
 
-        if (canDamage) shootHomingBlast();
+        if (canHeal)
+            shootHomingBlast();
     }
 
     private void shootDamagingBlast() {
-        if (controllable) this.direction = player.getLocation().getDirection();
+        if (controllable)
+            this.direction = player.getLocation().getDirection();
+
         this.blast = Methods.advanceLocationToDirection(direction, location, this.initialBlastSpeed);
 
         genericBlast(blast, false);
@@ -122,7 +127,7 @@ public class OldDarkBlast extends DarkAbility {
             if (target instanceof LivingEntity && !target.getUniqueId().equals(player.getUniqueId()) &&
                     !(target instanceof ArmorStand)) {
                 DamageHandler.damageEntity(target, this.damage, this);
-                player.getWorld().spawnParticle(Particle.DRAGON_BREATH, target.getLocation().add(0, 1, 0), 10, 0, 0, 0, 0.2);
+                player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, 1, 0), 10, 0, 0, 0, 0.2);
                 remove();
             }
         }
@@ -130,7 +135,9 @@ public class OldDarkBlast extends DarkAbility {
 
     private void shootSelectionBlast() {
         if (target == null) {
-            if (controllable) this.direction = player.getLocation().getDirection();
+            if (controllable)
+                this.direction = player.getLocation().getDirection();
+
             this.blast = Methods.advanceLocationToDirection(direction, location, this.initialBlastSpeed);
 
             genericBlast(blast, true);
@@ -142,12 +149,12 @@ public class OldDarkBlast extends DarkAbility {
 
             for (Entity target : GeneralMethods.getEntitiesAroundPoint(blast, this.blastRadius)) {
                 if (target instanceof LivingEntity && !target.getUniqueId().equals(player.getUniqueId())) {
-                    this.target = (LivingEntity) target;
+                    this.target = target;
                 }
             }
         } else {
             if (player.getLocation().distance(target.getLocation()) > this.range ||
-                    (System.currentTimeMillis() > time + selectionDuration && !canDamage)) {
+                    (System.currentTimeMillis() > time + selectionDuration && !canHeal)) {
                 remove();
             }
         }
@@ -155,9 +162,9 @@ public class OldDarkBlast extends DarkAbility {
 
     private void shootHomingBlast() {
         if (!hasReached) {
-            this.blast = Methods.advanceLocationToPoint(vector, location, target.getEyeLocation(), this.finalBlastSpeed);
+            this.blast = Methods.advanceLocationToPoint(vector, location, target.getLocation().add(0, 1,0), this.finalBlastSpeed);
 
-            player.getWorld().spawnParticle(Particle.REDSTONE, location, 2, 0.1, 0.1, 0.1, 0, purple);
+            player.getWorld().spawnParticle(Particle.REDSTONE, location, 2, 0.1, 0.1, 0.1, 0, pink);
 
             if (player.getLocation().distance(target.getLocation()) > this.range ||
                     origin.distance(target.getLocation()) > this.range ||
@@ -173,25 +180,28 @@ public class OldDarkBlast extends DarkAbility {
                 }
             }
         } else {
-            this.infectEntity(target);
+            this.healEntity(target);
         }
     }
 
-    private void infectEntity(Entity entity) {
+    private void healEntity(Entity entity) {
         if (entity instanceof LivingEntity && !(entity instanceof ArmorStand)) {
             LivingEntity livingEntity = (LivingEntity)entity;
-            livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
+            livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
                     20 * this.potionDuration, this.potionPower, false, true, false));
             remove();
         }
     }
 
     private void genericBlast(Location location, boolean healing) {
-        player.getWorld().spawnParticle(Particle.TOWN_AURA, location, 10, 0.1, 0.1, 0.1, 1);
-        player.getWorld().spawnParticle(Particle.REDSTONE, location, 2, 0.2, 0.2, 0.2, 0, black);
-        if (healing) player.getWorld().spawnParticle(Particle.REDSTONE, location, 2, 0.2, 0.2, 0.2, 0, purple);
+        player.getWorld().spawnParticle(Particle.END_ROD, location, 2, 0.1, 0.1, 0.1, 0);
+        player.getWorld().spawnParticle(Particle.REDSTONE, location, 2, 0.2, 0.2, 0.2, 0, white);
+
+        if (healing)
+            player.getWorld().spawnParticle(Particle.REDSTONE, location, 2, 0.2, 0.2, 0.2, 0, pink);
+
         if (burst) {
-            player.getWorld().spawnParticle(Particle.DRAGON_BREATH, location, 10, 0, 0, 0, 0.1);
+            player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 10, 0, 0, 0, 0.1);
             burst = false;
         }
     }
@@ -199,8 +209,13 @@ public class OldDarkBlast extends DarkAbility {
     private void showSelectedTarget() {
         if (target != null)
             player.getWorld().spawnParticle(
-                    Particle.TOWN_AURA, target.getLocation().add(0, 1, 0),
-                    10, 0.5, 1, 0.5, 0);
+                    Particle.REDSTONE, target.getLocation().add(0, 1, 0),
+                    2, 0.5, 1, 0.5, 0, white);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
     }
 
     @Override
@@ -235,7 +250,7 @@ public class OldDarkBlast extends DarkAbility {
 
     @Override
     public String getName() {
-        return "OldDarkBlast";
+        return "LightBlast";
     }
 
     @Override
@@ -245,7 +260,7 @@ public class OldDarkBlast extends DarkAbility {
 
     @Override
     public Location getLocation() {
-        return blast != null ? blast : player.getLocation();
+        return location;
     }
 
     @Override
