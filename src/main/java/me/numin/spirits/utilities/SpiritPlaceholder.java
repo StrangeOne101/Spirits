@@ -30,23 +30,23 @@ public class SpiritPlaceholder extends PlaceholderExpansion {
 
         if (params.equals("element") || params.equals("elementcolor")) {
             String e = "Nonbender";
-            ChatColor c = ChatColor.WHITE;
+            String c = ChatColor.WHITE + ""; //Changed to String to when the ChatColor is changed to the bungee one, it doesn't break
 
             if (Methods.isAvatar(bPlayer)) {
-                c = Element.AVATAR.getColor();
+                c = Element.AVATAR.getColor() + "";
                 e = Element.AVATAR.getName();
             } else if (elements.size() == 2 && bPlayer.hasElement(SpiritElement.DARK)
                     && bPlayer.hasElement(SpiritElement.LIGHT)) {
-                c = SpiritElement.NEUTRAL.getColor();
+                c = SpiritElement.NEUTRAL.getColor() + "";
                 e = SpiritElement.NEUTRAL.getName();
             } else if (elements.size() > 0) {
-                c = elements.get(0).getColor();
+                c = elements.get(0).getColor() + "";
                 e = elements.get(0).getName();
             }
             if (params.equals("element")) {
                 return e;
             } else {
-                return c.toString();
+                return c;
             }
         } else if (params.equals("elements")) {
             return elements.stream().map(item -> item.getColor() + item.getName()).collect(Collectors.joining(" "));

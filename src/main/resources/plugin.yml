@@ -17,6 +17,9 @@ permissions:
       bending.ability.phase: true
       bending.ability.possess: true
       bending.ability.vanish: true
+      bending.spirit.passive: true
+      bending.ability.SpiritualBody: true
+      bending.ability.SpiritBlast: true
   bending.lightspirit:
     default: true
     description: Gives access to all LightSpirit abilities.

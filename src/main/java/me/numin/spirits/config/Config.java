@@ -35,8 +35,11 @@ public class Config {
         config.addDefault("Language.Abilities.Spirit.Agility.Description", "This ability offers you 2 modes of mobility. The first being the ability to dash forward very quickly. The second being the ability to soar through the skies as if gravity is non-existant.");
         config.addDefault("Language.Abilities.Spirit.Agility.Instructions", "Left-Click: Dash ⏐ Hold shift: Soar");
 
-        config.addDefault("Language.Abilities.Spirit.Levitation.Description", "Spirits lack any earthly tethers which allow themselves to detach and enter the void, empty and become wind. Using this combo takes a toll on your essence and may weaken your mobility for a time.");
-        config.addDefault("Language.Abilities.Spirit.Levitation.Instructions", "Agility (Left-click) > Agility (Hold shift) > Vanish (Left-click)");
+        config.addDefault("Language.Abilities.Spirit.Passive.SpiritualBody.Description", "Spirits do not have a physical form. As such, they are immune to all forms of kinetic damage like fall damage");
+        config.addDefault("Language.Abilities.Spirit.Passive.SpiritualBody.Instructions", "Spirits are passively immune to fall damage");
+
+        config.addDefault("Language.Abilities.Spirit.Combo.Levitation.Description", "Spirits lack any earthly tethers which allow themselves to detach and enter the void, empty and become wind. Using this combo takes a toll on your essence and may weaken your mobility for a time.");
+        config.addDefault("Language.Abilities.Spirit.Combo.Levitation.Instructions", "Agility (Left-click) > Agility (Hold shift) > Vanish (Left-click)");
 
         config.addDefault("Language.Abilities.Spirit.Possess.Description", "Allows the spirit to possess the body of a human. Successful possession will slow the target and damage them, but if the target fights back, they can break possession and harm the possessor");
         config.addDefault("Language.Abilities.Spirit.Possess.Instructions", "Hold shift and look at a player/mob");
@@ -50,8 +53,8 @@ public class Config {
         language.addDefault("Abilities.Spirit.SpiritBlast.DeathMessage", "{victim} was torn apart by {attacker}'s {ability}");
 
 
-        config.addDefault("Language.Abilities.Spirit.Phase.Description", "This advanced combo allows a Spirit to dematerialize into a state where they can walk through walls and fly around a certain radius. They are able to do this because of their unqiue molecular makeup not seen in any other being!");
-        config.addDefault("Language.Abilities.Spirit.Phase.Instructions", "Vanish (Left-click 2x) > Possess (Tap-shift) > Vanish (Left-click) ⏐ To Exit: Vanish (Tap-shift)");
+        config.addDefault("Language.Abilities.Spirit.Combo.Phase.Description", "This advanced combo allows a Spirit to dematerialize into a state where they can walk through walls and fly around a certain radius. They are able to do this because of their unqiue molecular makeup not seen in any other being!");
+        config.addDefault("Language.Abilities.Spirit.Combo.Phase.Instructions", "Vanish (Left-click 2x) > Possess (Tap-shift) > Vanish (Left-click) ⏐ To Exit: Vanish (Tap-shift)");
 
         config.addDefault("Language.Abilities.Spirit.Vanish.Description", "Spirits are often seen disappearing into thin air and then reappearing somewhere different. With this ability, you can harness that power as well! However, there is a certain duration you are able to vanish for an a radius of how far away from your original location you're allowed to get!");
         config.addDefault("Language.Abilities.Spirit.Vanish.Instructions", "Hold shift: Disappear ⏐ Release shift: Reappear");
@@ -62,8 +65,8 @@ public class Config {
         /*config.addDefault("Language.Abilities.LightSpirit.LightBlast.Description", "Shoot a radiating blast of light towards your opponent!");
         config.addDefault("Language.Abilities.LightSpirit.LightBlast.Instructions", "Left-click to shoot the blast ⏐ Tap-shift to select a target then left-click to shoot a different kind of blast.");
 */
-        config.addDefault("Language.Abilities.LightSpirit.Rejuvenate.Description", "After executing the combo sequence, you will mark the ground with positively charged spiritual energy for a duration of time. Entities can come to this location to heal themselves, but dark creatures must beware!");
-        config.addDefault("Language.Abilities.LightSpirit.Rejuvenate.Instructions", "Alleviate (Shift down) > Alleviate (Right-Click block) > Alleviate (Release shift)");
+        config.addDefault("Language.Abilities.LightSpirit.Combo.Rejuvenate.Description", "After executing the combo sequence, you will mark the ground with positively charged spiritual energy for a duration of time. Entities can come to this location to heal themselves, but dark creatures must beware!");
+        config.addDefault("Language.Abilities.LightSpirit.Combo.Rejuvenate.Instructions", "Alleviate (Shift down) > Alleviate (Right-Click block) > Alleviate (Release shift)");
 
         config.addDefault("Language.Abilities.LightSpirit.Orb.Description", "Plant an orb of positive energy on the ground which awaits for oncoming entities. If the orb detects something moving past it, it'll expand and harm anyone in its wake! More features to come...");
         config.addDefault("Language.Abilities.LightSpirit.Orb.Instructions", "Hold shift until you see particles. Release shift while looking at an area nearby on the ground to plant it there.");
@@ -129,26 +132,6 @@ public class Config {
         config.addDefault("Abilities.Spirits.Neutral.Vanish.DivideRange.HealthRequired", 10);
         config.addDefault("Abilities.Spirits.Neutral.Vanish.DivideRange.DivideFactor", 2);
 
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.Enabled", true);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.Cooldown", 10000);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.Duration", 6000);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.Range", 10);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AllowedHealthLoss", 4);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Agility.Enabled", true);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Agility.Multiplier", 2);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Phase.Enabled", true);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Phase.Multiplier", 4);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Levitation.Enabled", true);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Levitation.Multiplier", 3);
-
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Enabled", true);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.CooldownMultiplier", 4);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Duration", 10000);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Range", 10);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.MinHealth", 6);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Vanish.ApplyCooldown", true);
-        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Vanish.CooldownMultiplier", 4);
-
         config.addDefault("Abilities.Spirits.LightSpirit.Alleviate.Enabled", true);
         config.addDefault("Abilities.Spirits.LightSpirit.Alleviate.Others.Cooldown", 5000);
         config.addDefault("Abilities.Spirits.LightSpirit.Alleviate.Others.Range", 5);
@@ -164,9 +147,7 @@ public class Config {
         config.addDefault("Abilities.Spirits.LightSpirit.Alleviate.ParticleColor.Green", 255);
         config.addDefault("Abilities.Spirits.LightSpirit.Alleviate.ParticleColor.Blue", 255);
 
-        //TODO: Re-enable when finalized
         /*config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Enabled", false);
-        //TODO: Define a cooldown
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Cooldown", 0);
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Controllable", false);
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Damage", 2);
@@ -208,15 +189,6 @@ public class Config {
         config.addDefault("Abilities.Spirits.LightSpirit.Shelter.Self.BlockArrows", true);
         config.addDefault("Abilities.Spirits.LightSpirit.Shelter.Others.BlockArrows", true);
 
-        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Enabled", true);
-        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Cooldown", 15000);
-        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Duration", 10000);
-        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Radius", 5);
-        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Damage", 1);
-        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.EffectInterval", 10);
-        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.HurtDarkSpirits", true);
-        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.HurtMonsters", true);
-
         config.addDefault("Abilities.Spirits.DarkSpirit.Intoxicate.Enabled", true);
         config.addDefault("Abilities.Spirits.DarkSpirit.Intoxicate.Cooldown", 5000);
         config.addDefault("Abilities.Spirits.DarkSpirit.Intoxicate.Range", 5);
@@ -234,20 +206,6 @@ public class Config {
         config.addDefault("Abilities.Spirits.DarkSpirit.Intoxicate.Potions.ConfusionDuration", 15);
         config.addDefault("Abilities.Spirits.DarkSpirit.Intoxicate.Potions.ConfusionPower", 1);
 
-        //TODO: Re-enable when finalized
-       /* config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Enabled", false);
-        //TODO: Define a cooldown amount.
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Cooldown", 0);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Controllable", false);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Damage", 4);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Range", 10);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.DurationOfSelection", 2000);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.PotionDuration", 5);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.PotionPower", 1);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.FirstBlastSpeed", 1);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.SecondBlastSpeed", 0.2);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.BlastRadius", 2);*/
-
         config.addDefault("Abilities.Spirits.DarkSpirit.Shackle.Enabled", true);
         config.addDefault("Abilities.Spirits.DarkSpirit.Shackle.Cooldown", 5000);
         config.addDefault("Abilities.Spirits.DarkSpirit.Shackle.Duration", 2500);
@@ -259,6 +217,49 @@ public class Config {
         config.addDefault("Abilities.Spirits.DarkSpirit.Strike.Range", 5);
         config.addDefault("Abilities.Spirits.DarkSpirit.Strike.Damage", 3);
         config.addDefault("Abilities.Spirits.DarkSpirit.Strike.Radius", 1);
+
+        //COMBOS
+
+        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Enabled", true);
+        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Cooldown", 15000);
+        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Duration", 10000);
+        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Radius", 5);
+        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.Damage", 1);
+        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.EffectInterval", 10);
+        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.HurtDarkSpirits", true);
+        config.addDefault("Abilities.Spirits.LightSpirit.Combo.Rejuvenate.HurtMonsters", true);
+
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.Enabled", true);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.Cooldown", 10000);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.Duration", 6000);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.Range", 10);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AllowedHealthLoss", 4);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Agility.Enabled", true);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Agility.Multiplier", 2);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Phase.Enabled", true);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Phase.Multiplier", 4);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Levitation.Enabled", true);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Levitation.Multiplier", 3);
+
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Enabled", true);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.CooldownMultiplier", 4);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Duration", 10000);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Range", 10);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.MinHealth", 6);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Vanish.ApplyCooldown", true);
+        config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Vanish.CooldownMultiplier", 4);
+
+       /* config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Enabled", false);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Cooldown", 0);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Controllable", false);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Damage", 4);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Range", 10);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.DurationOfSelection", 2000);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.PotionDuration", 5);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.PotionPower", 1);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.FirstBlastSpeed", 1);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.SecondBlastSpeed", 0.2);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.BlastRadius", 2);*/
 
         config.addDefault("Abilities.Spirits.DarkSpirit.Combo.Infest.Enabled", true);
         config.addDefault("Abilities.Spirits.DarkSpirit.Combo.Infest.Cooldown", 15000);
