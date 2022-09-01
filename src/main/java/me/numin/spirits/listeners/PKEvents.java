@@ -14,9 +14,9 @@ import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.SpiritElement;
 
+import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

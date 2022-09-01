@@ -30,7 +30,7 @@ public class Abilities implements Listener {
         Player player = event.getPlayer();
         BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
 
-        Possess.punchPossessing(event.getPlayer());
+        //Possess.punchPossessing(event.getPlayer());
 
         if (event.isCancelled() || bPlayer == null) return;
 
@@ -76,9 +76,8 @@ public class Abilities implements Listener {
             new Soar(player);
 
         } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Possess")) {
-            if (event.isSneaking()) {
-                if (!CoreAbility.hasAbility(player, Possess.class)) new Possess(player);
-                else if (Possess.stopSpectating(event.getPlayer())) event.setCancelled(true);
+            if (!event.isSneaking() && !CoreAbility.hasAbility(player, Possess.class)) {
+                new Possess(player);
             }
         } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Shelter") && !CoreAbility.hasAbility(player, Shelter.class)) {
             new Shelter(player, ShelterType.SHIFT);
@@ -109,10 +108,10 @@ public class Abilities implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onDismount(EntityDismountEvent event) {
         if (event.getDismounted() instanceof Player) {
             event.getDismounted().sendMessage("Worked");
         }
-    }
+    }*/
 }
