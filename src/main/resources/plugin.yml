@@ -41,6 +41,7 @@ permissions:
       bending.ability.shackle: true
       bending.ability.strike: true
       bending.neutralspirit: true
+      bending.ability.darkblast: true
   bending.spirit:
     default: false
     description: Do not grant this permission. This being false stops players from becoming ONLY a neutral spirit
