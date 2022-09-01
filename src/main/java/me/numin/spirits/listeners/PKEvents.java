@@ -14,9 +14,9 @@ import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.SpiritElement;
 
+import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -75,7 +75,7 @@ public class PKEvents implements Listener {
                 }
             }
 
-            GeneralMethods.removeUnusableAbilities(bPlayer.getName());
+            bPlayer.removeUnusableAbilities();
             saveElements(bPlayer); //Use our own method due to async syncing causing the player's normal spirit element not to be saved
 
 
@@ -127,7 +127,7 @@ public class PKEvents implements Listener {
         }
 
         if (avatar) {
-            c = ChatColor.valueOf(ConfigManager.languageConfig.get().getString("Chat.Colors.Avatar"));
+            c = ChatColor.of(ConfigManager.languageConfig.get().getString("Chat.Colors.Avatar"));
         }
 
         String format = ConfigManager.languageConfig.get().getString("Chat.Format");
@@ -164,7 +164,7 @@ public class PKEvents implements Listener {
             try {
                 DBConnection.sql.getConnection().setAutoCommit(false);
                 DBConnection.sql.getConnection().commit(); //Force the existing async stuff to commit
-                GeneralMethods.saveElements(bPlayer);
+                bPlayer.saveElements();
                 DBConnection.sql.getConnection().commit(); //Commit our element change
                 DBConnection.sql.getConnection().setAutoCommit(true); //Turn autosync back on
             } catch (SQLException e) {

@@ -21,11 +21,11 @@ public class Config {
         FileConfiguration language = ConfigManager.languageConfig.get();
 
         //Rank configuration
-        language.addDefault("Chat.Colors.Spirit", SpiritElement.NEUTRAL.getDefaultColor().name());
+        language.addDefault("Chat.Colors.Spirit", SpiritElement.NEUTRAL.getDefaultColor().getName());
         language.addDefault("Chat.Colors.SpiritSub", "DARK_PURPLE");
-        language.addDefault("Chat.Colors.LightSpirit", SpiritElement.LIGHT.getDefaultColor().name());
+        language.addDefault("Chat.Colors.LightSpirit", SpiritElement.LIGHT.getDefaultColor().getName());
         language.addDefault("Chat.Colors.LightSpiritSub", "WHITE");
-        language.addDefault("Chat.Colors.DarkSpirit", SpiritElement.DARK.getDefaultColor().name());
+        language.addDefault("Chat.Colors.DarkSpirit", SpiritElement.DARK.getDefaultColor().getName());
         language.addDefault("Chat.Colors.DarkSpiritSub", "DARK_GRAY");
         language.addDefault("Chat.Prefixes.Spirit", "[Spirit]");
         language.addDefault("Chat.Prefixes.LightSpirit", "[LightSpirit]");

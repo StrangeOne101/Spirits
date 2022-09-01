@@ -72,7 +72,7 @@ public class SpiritPlaceholder extends PlaceholderExpansion {
 
     @Override
     public String getIdentifier() {
-        return "ProjectKorra";
+        return "Spirits";
     }
 
     @Override

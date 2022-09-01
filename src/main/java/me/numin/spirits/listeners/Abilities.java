@@ -112,7 +112,7 @@ public class Abilities implements Listener {
     @EventHandler
     public void onDismount(EntityDismountEvent event) {
         if (event.getDismounted() instanceof Player) {
-            event.getDismounted().sendMessage("Worked");
+            //event.getDismounted().sendMessage("Worked");
         }
     }
 }

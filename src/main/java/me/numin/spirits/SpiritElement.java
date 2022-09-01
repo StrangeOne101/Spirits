@@ -2,7 +2,7 @@ package me.numin.spirits;
 
 import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.configuration.ConfigManager;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
 
 public class SpiritElement extends Element {
@@ -26,12 +26,12 @@ public class SpiritElement extends Element {
 
     public ChatColor getColor() {
         String color = ConfigManager.languageConfig.get().getString("Chat.Colors." + getName());
-        return (color != null) ? ChatColor.valueOf(color) : getDefaultColor();
+        return (color != null) ? ChatColor.of(color) : getDefaultColor();
     }
 
     public ChatColor getSubColor() {
         String color = ConfigManager.languageConfig.get().getString("Chat.Colors." + getColor() + "Sub");
-        return (color != null) ? ChatColor.valueOf(color) : ChatColor.WHITE;
+        return (color != null) ? ChatColor.of(color) : ChatColor.WHITE;
     }
 
     public ChatColor getDefaultColor() {
