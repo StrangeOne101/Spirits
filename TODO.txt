@@ -1,0 +1,42 @@
+# Spirits TODO List
+
+CURRENT
+[15:15:52 ERROR]: Could not pass event EntityDamageEvent to Spirits v1.1d
+java.lang.NullPointerException: Cannot invoke "com.projectkorra.projectkorra.ability.CoreAbility.getElement()" because "ability" is null
+        at com.projectkorra.projectkorra.BendingPlayer.canUsePassive(BendingPlayer.java:331) ~[ProjectKorra-1.9.3.jar:?]
+        at me.numin.spirits.listeners.Passives.onFallDamage(Passives.java:29) ~[Spirits-1.1d-PK1.9.3.jar:?]
+
+1.1:
+- Fix up all basic abilities
+- Redo Possess
+- Add SpiritBlast
+- Changed the passive into a passive ability
+- Light/Dark Spirits are now given the Spirit element as well when they choose
+- Overridden PK's chat to fix Spirits showing as avatar
+- Added %spirits_element% PAPI placeholder that fixes spirits showing as Avatars
+1.2:
+- Re-add Corrupt and Purify
+  - They can only convert spirits on low health
+  - The player's concentration can be broken by being damaged
+  - Spirits can break out the whirlpool
+  - Spirits will be converted on death
+  - The chance of a spirit breaking out is related to their health (needs work)
+  - Current break system idea:
+    - The starting health gives a player/mob more chances to break out
+    - Extra chances are decided by:
+      - The initial health
+      - While the health is above the HealthBase (X), multiply the health by a multiplier (Y)
+      - For each loop, chances++
+      - E.g. X = 4, Y = 0.6, So 20 health = 20 -> 12 -> 7.2 -> 4.32 -> 2.59 (now under the HealthBase, so there are 4 extra chances)
+      - Each time they attempt to break out, there is a chances/40 chance to break out
+    - Mobs try break out every second.
+1.3:
+- Replace Shelter with Trail
+  - Leaves a trail of healing wherever you go
+  - Can be used to heal yourself or other players
+  - Can be toggled into a death zone by clicking
+- Add Dark Spirit bomb ability
+  - Place bombs that are ALMOST invisible to other players
+  - Bombs are very visisble to the player who placed them (glowing entities maybe?)
+  - Can be detonated to cause life steal damage to all within range
+  - Explosive and have knockback

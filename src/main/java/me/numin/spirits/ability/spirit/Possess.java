@@ -83,6 +83,7 @@ public class Possess extends SpiritAbility {
     private GameMode originalGameMode;
     private Location blast;
     private SpiritElement spiritElement = SpiritElement.NEUTRAL;
+    private final Vector none = new Vector(0, 0, 0);
 
     private String possessString;
     private String possessLeaveString;
@@ -182,7 +183,7 @@ public class Possess extends SpiritAbility {
         for (int i = 0; i < 2; i++) {
             double angle = ((i * 180) + (counter * 20)) % 360;
 
-            Vector vec = GeneralMethods.rotateVectorAroundVector(new Vector(1, 0, 0), this.player.getEyeLocation().getDirection(), angle);
+            Vector vec = GeneralMethods.rotateVectorAroundVector(this.player.getEyeLocation().getDirection(), this.player.getEyeLocation().getDirection(), angle);
 
             player.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), 1, 0, 0, 0, 0, new DustOptions(spiritElement.getDustColor(), 1));
         }

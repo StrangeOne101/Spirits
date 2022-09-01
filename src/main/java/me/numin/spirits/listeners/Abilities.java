@@ -21,6 +21,7 @@ import me.numin.spirits.ability.light.Alleviate;
 import me.numin.spirits.ability.light.Orb;
 import me.numin.spirits.ability.light.Shelter;
 import me.numin.spirits.ability.light.Shelter.ShelterType;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 public class Abilities implements Listener {
 
@@ -105,6 +106,13 @@ public class Abilities implements Listener {
             if (event.getCause() == TeleportCause.SPECTATE) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onDismount(EntityDismountEvent event) {
+        if (event.getDismounted() instanceof Player) {
+            event.getDismounted().sendMessage("Worked");
         }
     }
 }

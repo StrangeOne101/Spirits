@@ -5,6 +5,7 @@ import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.PKListener;
 import com.projectkorra.projectkorra.configuration.ConfigManager;
+import com.projectkorra.projectkorra.event.BendingPlayerCreationEvent;
 import com.projectkorra.projectkorra.event.BendingReloadEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent.Result;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
@@ -144,6 +145,18 @@ public class PKEvents implements Listener {
             e.printStackTrace();
             event.getSender().sendMessage(ChatColor.RED + "Failed to load the Spirits config: " + e.getLocalizedMessage());
         }
+    }
+
+    @EventHandler
+    public void onBendingPlayerLoad(BendingPlayerCreationEvent event) {
+        BendingPlayer bPlayer = event.getBendingPlayer();
+        if (bPlayer.hasElement(SpiritElement.LIGHT) || bPlayer.hasElement(SpiritElement.DARK)) {
+            if (!bPlayer.hasElement(SpiritElement.NEUTRAL)) {
+                bPlayer.getElements().add(SpiritElement.NEUTRAL);
+                saveElements(bPlayer);
+            }
+        }
+
     }
 
     private void saveElements(BendingPlayer bPlayer) {
