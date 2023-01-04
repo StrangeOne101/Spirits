@@ -57,7 +57,7 @@ public class Config {
 */
 
         config.addDefault("Language.Abilities.Spirit.Combo.Phase.Description", "This advanced combo allows a Spirit to dematerialize into a state where they can walk through walls and fly around a certain radius. They are able to do this because of their unqiue molecular makeup not seen in any other being!");
-        config.addDefault("Language.Abilities.Spirit.Combo.Phase.Instructions", "Vanish (Left-click 2x) > Possess (Shift down) > Vanish (Snift up) ⏐ To Exit: Vanish (Tap-shift)");
+        config.addDefault("Language.Abilities.Spirit.Combo.Phase.Instructions", "Vanish (Left-click 2x) > Possess (Shift down) > Vanish (Shift up) ⏐ To Exit: Vanish (Tap-shift)");
 
         config.addDefault("Language.Abilities.Spirit.Vanish.Description", "Spirits are often seen disappearing into thin air and then reappearing somewhere different. With this ability, you can harness that power as well! However, there is a certain duration you are able to vanish for an a radius of how far away from your original location you're allowed to get!");
         config.addDefault("Language.Abilities.Spirit.Vanish.Instructions", "Hold shift: Disappear ⏐ Release shift: Reappear");
@@ -105,7 +105,7 @@ public class Config {
         config.addDefault("Abilities.Spirits.Neutral.Possess.Cooldown", 5000);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Range", 15);
         config.addDefault("Abilities.Spirits.Neutral.Possess.MinDamage", 2);
-        config.addDefault("Abilities.Spirits.Neutral.Possess.MaxDamage", 6);
+        config.addDefault("Abilities.Spirits.Neutral.Possess.MaxDamage", 4);
         config.addDefault("Abilities.Spirits.Neutral.Possess.FailureSelfDamage", 6);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Duration", 4000);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Speed", 0.8D);
