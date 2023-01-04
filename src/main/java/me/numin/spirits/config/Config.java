@@ -42,10 +42,11 @@ public class Config {
         config.addDefault("Language.Abilities.Spirit.Combo.Levitation.Instructions", "Agility (Left-click) > Agility (Hold shift) > Vanish (Left-click)");
 
         config.addDefault("Language.Abilities.Spirit.Possess.Description", "Allows the spirit to possess the body of a human. Successful possession will slow the target and damage them, but if the target fights back, they can break possession and harm the possessor");
-        config.addDefault("Language.Abilities.Spirit.Possess.Instructions", "Hold shift and look at a player/mob");
+        config.addDefault("Language.Abilities.Spirit.Possess.Instructions", "Tap sneak and ram into a player/mob");
         config.addDefault("Language.Abilities.Spirit.Possess.Possessed", "&9** Possessed **");
-        config.addDefault("Language.Abilities.Spirit.Possess.PossessionBroken", "&9** Possession Broken **");
-        language.addDefault("Abilities.Spirit.Possess.DeathMessage", "{victim} succumbed to {attacker}'s possession");
+        config.addDefault("Language.Abilities.Spirit.Possess.PossessionEnd", "&9** Possession Ended **");
+        config.addDefault("Language.Abilities.Spirit.Possess.PossessionBreak", "&9** Broken Possession **");
+        language.addDefault("Abilities.Spirit.Possess.DeathMessage", "{victim} succumbed to {attacker}'s {ability}");
         language.addDefault("Abilities.Spirit.PossessRecoil.DeathMessage", "{victim} failed to possess {attacker}");
 
         config.addDefault("Language.Abilities.Spirit.SpiritBlast.Description", "Release multiple blasts of spirit energy in quick succession that damages all enemies they come across");
@@ -100,14 +101,14 @@ public class Config {
 
         config.addDefault("Abilities.Spirits.Neutral.Possess.Enabled", true);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Cooldown", 5000);
-        config.addDefault("Abilities.Spirits.Neutral.Possess.Range", 12);
+        config.addDefault("Abilities.Spirits.Neutral.Possess.Range", 15);
         config.addDefault("Abilities.Spirits.Neutral.Possess.MinDamage", 2);
         config.addDefault("Abilities.Spirits.Neutral.Possess.MaxDamage", 6);
         config.addDefault("Abilities.Spirits.Neutral.Possess.FailureSelfDamage", 6);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Duration", 4000);
         config.addDefault("Abilities.Spirits.Neutral.Possess.Speed", 0.8D);
-        config.addDefault("Abilities.Spirits.Neutral.Possess.Durability", 8);
-        config.addDefault("Abilities.Spirits.Neutral.Possess.ChargeTime", 1400);
+        config.addDefault("Abilities.Spirits.Neutral.Possess.Durability", 6);
+        config.addDefault("Abilities.Spirits.Neutral.Possess.ChargeTime", 0);
 
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Enabled", true);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Cooldown", 9000);
