@@ -7,6 +7,7 @@ import me.numin.spirits.ability.spirit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -89,6 +90,14 @@ public class Abilities implements Listener {
         } else if (bPlayer.getBoundAbilityName().equalsIgnoreCase("Orb")) {
             new Orb(player);
 
+        }
+    }
+
+    @EventHandler
+    public void onExplode(EntityExplodeEvent event) {
+        if (Possess.getPossessed(event.getEntity()) != null) {
+            Possess possess = Possess.getPossessed(event.getEntity());
+            possess.remove();
         }
     }
 

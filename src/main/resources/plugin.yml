@@ -1,7 +1,7 @@
 name: Spirits
 version: ${project.version}
 main: me.numin.spirits.Spirits
-api-version: 1.15
+api-version: 1.16
 depend: [ProjectKorra]
 softdepend: [PlaceholderAPI]
 authors: [Numin, StrangeOne101]
