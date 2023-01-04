@@ -15,6 +15,7 @@ import com.projectkorra.projectkorra.util.ChatUtil;
 import com.projectkorra.projectkorra.util.Cooldown;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.PossessRecoil;
+import me.numin.spirits.utilities.TempSpectator;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -78,11 +79,10 @@ public class Possess extends SpiritAbility {
     private final float volume = 0.1F;
 
     private long possessStartTime;
-    private boolean releasedSneak, wasFlying;
-    private float currentFlySpeed;
+    private boolean releasedSneak;
     private ArmorStand armorStand;
     private LivingEntity target;
-    private GameMode originalGameMode;
+    private TempSpectator spectator;
 
     private double distanceTraveled = 0;
 
@@ -118,12 +118,12 @@ public class Possess extends SpiritAbility {
         this.possessBreak = ChatUtil.color(Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.PossessionBreak"));
         this.durabilityString = ChatUtil.color(Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.Durability"));
         this.durabilityChar = ChatUtil.color(Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.DurabilityChar"));
-        this.wasFlying = player.isFlying();
+        this.spectator = TempSpectator.create(player);
     }
 
     @Override
     public void progress() {
-        if (!canBend()) {
+        if (!spectator.canBend(this)) {
             remove();
         }
         else if (state == State.CHARGING) {
@@ -147,11 +147,7 @@ public class Possess extends SpiritAbility {
 
             } else {
                 this.armorStand = this.createArmorStand();
-                this.originalGameMode = player.getGameMode();
-                this.wasFlying = player.isFlying();
-                this.currentFlySpeed = player.getFlySpeed();
-
-                player.setGameMode(GameMode.SPECTATOR);
+                spectator.spectator();
                 player.setFlySpeed(0F);
                 this.state = State.TRAVELING;
             }
@@ -380,16 +376,12 @@ public class Possess extends SpiritAbility {
 
     @Override
     public void remove() {
-        if (player.getGameMode() == GameMode.SPECTATOR) {
-            player.setSpectatorTarget(null);
-            player.setGameMode(this.originalGameMode);
+        if (spectator.isSpectator()) {
+            spectator.revert();
         }
 
-        player.setFlying(wasFlying);
-        player.setFlySpeed(currentFlySpeed);
         player.setNoDamageTicks(0);
-        player.showPlayer(Spirits.plugin, player); //Fixes a vanilla bug where the player is invisible after switching from
-                                                   //spectator to survival
+
         if (this.armorStand != null && !this.armorStand.isDead()) this.armorStand.remove();
 
         if (state == State.TRAVELING) {
@@ -430,46 +422,6 @@ public class Possess extends SpiritAbility {
         }
 
         super.remove();
-    }
-
-    private boolean canBend() {
-
-        List<String> disabledWorlds = getConfig().getStringList("Properties.DisabledWorlds");
-        Location playerLoc = this.player.getLocation();
-
-        if (!this.player.isOnline() || this.player.isDead())
-            return false;
-        if (!bPlayer.canBind(this))
-            return false;
-        if (getPlayer() != null && getLocation() != null && !getLocation().getWorld().equals(this.player.getWorld()))
-            return false;
-        if (bPlayer.isOnCooldown(getName()))
-            return false;
-        if (!getName().equals(bPlayer.getBoundAbilityName()))
-            return false;
-        if (disabledWorlds.contains(this.player.getWorld().getName()))
-            return false;
-        if (Commands.isToggledForAll || !bPlayer.isToggled() || !bPlayer.isElementToggled(getElement()))
-            return false;
-        if (this.player.getGameMode() == GameMode.SPECTATOR && (state != State.TRAVELING && state != State.POSSESSING)) {
-            return false;
-        }
-
-        if (bPlayer.getCooldowns().containsKey(getName())) {
-            if (((Cooldown)bPlayer.getCooldowns().get(getName())).getCooldown() + getConfig().getLong("Properties.GlobalCooldown") >= System.currentTimeMillis()) {
-                return false;
-            }
-
-            bPlayer.getCooldowns().remove(getName());
-        }
-
-        if (bPlayer.isChiBlocked() || bPlayer.isParalyzed() || bPlayer.isBloodbent() || bPlayer.isControlledByMetalClips())
-            return false;
-        if (RegionProtection.isRegionProtected(this.player, playerLoc, this)) {
-            return false;
-        }
-
-        return true;
     }
 
     public static Possess getPossessed(Entity entity) {

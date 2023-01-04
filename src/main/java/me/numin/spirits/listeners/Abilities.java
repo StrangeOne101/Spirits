@@ -4,11 +4,13 @@ import com.projectkorra.projectkorra.ability.CoreAbility;
 import me.numin.spirits.ability.dark.DarkBlast;
 import me.numin.spirits.ability.light.LightBlast;
 import me.numin.spirits.ability.spirit.*;
+import me.numin.spirits.utilities.TempSpectator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -123,5 +125,10 @@ public class Abilities implements Listener {
         if (event.getDismounted() instanceof Player) {
             //event.getDismounted().sendMessage("Worked");
         }
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        TempSpectator.destroy(event.getPlayer());
     }
 }

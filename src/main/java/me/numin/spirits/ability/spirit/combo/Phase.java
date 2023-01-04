@@ -2,17 +2,23 @@ package me.numin.spirits.ability.spirit.combo;
 
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
+import com.projectkorra.projectkorra.command.Commands;
+import com.projectkorra.projectkorra.region.RegionProtection;
 import com.projectkorra.projectkorra.util.ClickType;
+import com.projectkorra.projectkorra.util.Cooldown;
 import com.projectkorra.projectkorra.util.ParticleEffect;
+import me.numin.spirits.ability.spirit.Possess;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.Spirits;
 import me.numin.spirits.ability.api.SpiritAbility;
+import me.numin.spirits.utilities.TempSpectator;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Phase extends SpiritAbility implements ComboAbility {
 
@@ -20,8 +26,8 @@ public class Phase extends SpiritAbility implements ComboAbility {
     //TODO: Feature where flying through entities while phased could give the target and/or spirit effects (shivers, etc)
     //TODO: Update sounds.
 
-    private GameMode originGM;
     private Location origin;
+    private TempSpectator spectator;
 
     private boolean applyLevitationCD, applyVanishCD, isPhased, playEffects;
     private double multiplier, levitationMultiplier, vanishMultiplier;
@@ -50,11 +56,11 @@ public class Phase extends SpiritAbility implements ComboAbility {
         this.applyVanishCD = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Combo.Phase.Vanish.ApplyCooldown");
         this.vanishMultiplier = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Combo.Phase.Vanish.CooldownMultiplier");
 
-        applyLevitationCD = true;
+        applyLevitationCD = bPlayer.getAbilities().values().contains("Levitation");
         levitationMultiplier = 4;
 
         this.origin = player.getLocation();
-        this.originGM = player.getGameMode();
+        this.spectator = TempSpectator.create(player);
         this.isPhased = false;
         this.playEffects = true;
     }
@@ -63,7 +69,7 @@ public class Phase extends SpiritAbility implements ComboAbility {
     public void progress() {
         this.cooldown = (long) ((System.currentTimeMillis() - time) * multiplier);
 
-        if (!bPlayer.canBendIgnoreBinds(this)) {
+        if (!spectator.canBendIgnoreBinds(this)) {
             remove();
             return;
         }
@@ -101,12 +107,13 @@ public class Phase extends SpiritAbility implements ComboAbility {
     }
 
     private void setGameMode() {
-        player.setGameMode(GameMode.SPECTATOR);
+        spectator.spectator();
         isPhased = true;
+        player.setFlySpeed(0.1F);
     }
 
     private void resetGameMode() {
-        player.setGameMode(originGM);
+        spectator.revert();
         isPhased = false;
     }
 
