@@ -21,6 +21,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.RegisteredListener;
@@ -92,39 +93,32 @@ public class PKEvents implements Listener {
     public void onPlayerChat(final AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
         final BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
-        boolean avatar = false;
-        ArrayList<Element> elements = new ArrayList<>();
 
-        String e = "Nonbender";
-        ChatColor c = ChatColor.WHITE;
-        if (bPlayer != null) {
-            avatar = Methods.isAvatar(bPlayer);
-            elements = new ArrayList<>(bPlayer.getElements());
-            elements.remove(SpiritElement.NEUTRAL);
-            if (avatar) {
-                c = Element.AVATAR.getColor();
-                e = Element.AVATAR.getName();
-            } else if (elements.size() == 2 && bPlayer.hasElement(SpiritElement.DARK)
-                    && bPlayer.hasElement(SpiritElement.LIGHT)) {
-                c = SpiritElement.NEUTRAL.getColor();
-                e = SpiritElement.NEUTRAL.getName();
-            } else if (elements.size() > 0) {
-                c = elements.get(0).getColor();
-                e = elements.get(0).getName();
-            }
+        if (!ConfigManager.languageConfig.get().getBoolean("Chat.Enable") || bPlayer == null) {
+            return;
         }
-        final String element = ConfigManager.languageConfig.get().getString("Chat.Prefixes." + e);
+
+        boolean avatar = Methods.isAvatar(bPlayer);;
+        ArrayList<Element> elements = new ArrayList<>(bPlayer.getElements());
+        elements.remove(SpiritElement.NEUTRAL);
+        String name = "Nonbender";
+        ChatColor c = ChatColor.WHITE;
+
+        if (avatar) {
+            c = Element.AVATAR.getColor();
+            name = Element.AVATAR.getName();
+        } else if (elements.size() == 2 && bPlayer.hasElement(SpiritElement.DARK)
+                && bPlayer.hasElement(SpiritElement.LIGHT)) {
+            c = SpiritElement.NEUTRAL.getColor();
+            name = SpiritElement.NEUTRAL.getName();
+        } else if (elements.size() > 0) {
+            c = elements.get(0).getColor();
+            name = elements.get(0).getName();
+        }
+        final String element = ConfigManager.languageConfig.get().getString("Chat.Prefixes." + name);
         event.setFormat(event.getFormat().replace("{element}", c + element + ChatColor.RESET)
                 .replace("{ELEMENT}", c + element + ChatColor.RESET)
                 .replace("{elementcolor}", c + "").replace("{ELEMENTCOLOR}", c + ""));
-
-        if (!ConfigManager.languageConfig.get().getBoolean("Chat.Enable")) {
-            return;
-        }
-
-        if (bPlayer == null) {
-            return;
-        }
 
         if (avatar) {
             c = ChatColor.of(ConfigManager.languageConfig.get().getString("Chat.Colors.Avatar"));
@@ -138,13 +132,19 @@ public class PKEvents implements Listener {
 
     @EventHandler
     public void onPKReload(BendingReloadEvent event) {
-        try {
-            Spirits.plugin.getConfig().load(new File(Spirits.plugin.getDataFolder(), "config.yml"));
-            event.getSender().sendMessage(ChatColor.BLUE + "Reloaded Spirits!");
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-            event.getSender().sendMessage(ChatColor.RED + "Failed to load the Spirits config: " + e.getLocalizedMessage());
-        }
+        Bukkit.getScheduler().runTaskLater(Spirits.plugin, () -> {
+            try {
+                Spirits.plugin.getConfig().load(new File(Spirits.plugin.getDataFolder(), "config.yml"));
+                HandlerList.unregisterAll(Spirits.plugin);
+                Bukkit.getPluginManager().registerEvents(new Abilities(), Spirits.plugin);
+                Bukkit.getPluginManager().registerEvents(new Passives(), Spirits.plugin);
+                Bukkit.getPluginManager().registerEvents(new PKEvents(), Spirits.plugin);
+                event.getSender().sendMessage(ChatColor.BLUE + "Reloaded Spirits v" + Spirits.plugin.getDescription().getVersion() + "!");
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+                event.getSender().sendMessage(ChatColor.RED + "Failed to load the Spirits config: " + e.getLocalizedMessage());
+            }
+        }, 1L);
     }
 
     @EventHandler
@@ -156,9 +156,12 @@ public class PKEvents implements Listener {
                 saveElements(bPlayer);
             }
         }
-
     }
 
+    /**
+     * Forcefully saves elements this instant. Makes the database commit
+     * @param bPlayer The bending player
+     */
     private void saveElements(BendingPlayer bPlayer) {
         Bukkit.getScheduler().runTaskAsynchronously(Spirits.plugin, () -> {
             try {

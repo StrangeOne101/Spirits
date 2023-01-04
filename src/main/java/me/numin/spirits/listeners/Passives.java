@@ -14,20 +14,27 @@ import com.projectkorra.projectkorra.BendingPlayer;
 
 public class Passives implements Listener {
 
-    private SpiritualBody spiritualBody;
+    private final SpiritualBody spiritualBody;
+
+    public Passives() {
+        spiritualBody = (SpiritualBody) CoreAbility.getAbility(SpiritualBody.class);
+    }
 
     @EventHandler(priority = EventPriority.HIGH) //HIGH will make sure air and earth passives have already run
     public void onFallDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
-            if (spiritualBody == null) spiritualBody = (SpiritualBody) CoreAbility.getAbility(SpiritualBody.class);
+            if (spiritualBody == null) return;
+
+            if (!spiritualBody.isEnabled()) return;
 
             Player player = (Player) event.getEntity();
             BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
 
             if (event.getCause() == DamageCause.FALL && bPlayer.hasElement(SpiritElement.NEUTRAL)
                     && bPlayer.canUsePassive(spiritualBody) && bPlayer.canBendPassive(spiritualBody)) {
-                event.setDamage(0D);
-                event.setCancelled(true);
+                double newDamage = event.getDamage() * SpiritualBody.getFallDamageModifier();
+                event.setDamage(newDamage);
+                event.setCancelled(newDamage <= 0);
             }
         }
     }

@@ -120,6 +120,8 @@ public class Config {
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Radius", 0.3D);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.CanRedirect", true);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.CanAlwaysRedirect", false);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritualBody.Enabled", true);
+        config.addDefault("Abilities.Spirits.Neutral.SpiritualBody.FallDamageModifier", 0.0);
 
         config.addDefault("Abilities.Spirits.Neutral.Vanish.Enabled", true);
         config.addDefault("Abilities.Spirits.Neutral.Vanish.Cooldown", 7000);
