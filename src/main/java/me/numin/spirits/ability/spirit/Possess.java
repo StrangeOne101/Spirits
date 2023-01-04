@@ -388,8 +388,8 @@ public class Possess extends SpiritAbility {
         player.setFlying(wasFlying);
         player.setFlySpeed(currentFlySpeed);
         player.setNoDamageTicks(0);
-        player.setSneaking(false);
-
+        player.showPlayer(Spirits.plugin, player); //Fixes a vanilla bug where the player is invisible after switching from
+                                                   //spectator to survival
         if (this.armorStand != null && !this.armorStand.isDead()) this.armorStand.remove();
 
         if (state == State.TRAVELING) {

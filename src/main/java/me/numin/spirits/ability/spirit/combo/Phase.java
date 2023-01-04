@@ -127,8 +127,7 @@ public class Phase extends SpiritAbility implements ComboAbility {
         combo.add(new AbilityInformation("Vanish", ClickType.LEFT_CLICK));
         combo.add(new AbilityInformation("Vanish", ClickType.LEFT_CLICK));
         combo.add(new AbilityInformation("Possess", ClickType.SHIFT_DOWN));
-        combo.add(new AbilityInformation("Possess", ClickType.SHIFT_UP));
-        combo.add(new AbilityInformation("Vanish", ClickType.LEFT_CLICK));
+        combo.add(new AbilityInformation("Vanish", ClickType.SHIFT_UP));
         return combo;
     }
 
