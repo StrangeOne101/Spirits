@@ -260,4 +260,9 @@ public class SpiritBlast extends SpiritAbility {
         //Must be redefined due to some stupid feken bugs
         return Spirits.plugin.getConfig().getBoolean("Abilities.Spirits." + SpiritElement.NEUTRAL.getConfigName() + "." + getName() + ".Enabled");
     }
+
+    @Override
+    public boolean isHiddenAbility() {
+        return true;
+    }
 }

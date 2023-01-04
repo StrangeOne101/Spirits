@@ -262,9 +262,4 @@ public class LightBlast extends LightAbility {
     public Location getLocation() {
         return location;
     }
-
-    @Override
-    public boolean isHiddenAbility() {
-        return true;
-    }
 }

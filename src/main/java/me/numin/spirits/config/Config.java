@@ -49,10 +49,10 @@ public class Config {
         language.addDefault("Abilities.Spirit.Possess.DeathMessage", "{victim} succumbed to {attacker}'s {ability}");
         language.addDefault("Abilities.Spirit.PossessRecoil.DeathMessage", "{victim} failed to possess {attacker}");
 
-        config.addDefault("Language.Abilities.Spirit.SpiritBlast.Description", "Release multiple blasts of spirit energy in quick succession that damages all enemies they come across");
-        config.addDefault("Language.Abilities.Spirit.Possess.Instructions", "Left-Click (Multiple): Release Spirit Blast | Tap Sneak: Redirect");
+        /*config.addDefault("Language.Abilities.Spirit.SpiritBlast.Description", "Release multiple blasts of spirit energy in quick succession that damages all enemies they come across");
+        config.addDefault("Language.Abilities.Spirit.SpiritBlast.Instructions", "Left-Click (Multiple): Release Spirit Blast | Tap Sneak: Redirect");
         language.addDefault("Abilities.Spirit.SpiritBlast.DeathMessage", "{victim} was torn apart by {attacker}'s {ability}");
-
+*/
 
         config.addDefault("Language.Abilities.Spirit.Combo.Phase.Description", "This advanced combo allows a Spirit to dematerialize into a state where they can walk through walls and fly around a certain radius. They are able to do this because of their unqiue molecular makeup not seen in any other being!");
         config.addDefault("Language.Abilities.Spirit.Combo.Phase.Instructions", "Vanish (Left-click 2x) > Possess (Tap-shift) > Vanish (Left-click) ⏐ To Exit: Vanish (Tap-shift)");
@@ -110,7 +110,7 @@ public class Config {
         config.addDefault("Abilities.Spirits.Neutral.Possess.Durability", 6);
         config.addDefault("Abilities.Spirits.Neutral.Possess.ChargeTime", 0);
 
-        config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Enabled", true);
+        /*config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Enabled", true);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Cooldown", 9000);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Range", 50);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Damage", 2);
@@ -120,6 +120,7 @@ public class Config {
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Radius", 0.3D);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.CanRedirect", true);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.CanAlwaysRedirect", false);
+*/
         config.addDefault("Abilities.Spirits.Neutral.SpiritualBody.Enabled", true);
         config.addDefault("Abilities.Spirits.Neutral.SpiritualBody.FallDamageModifier", 0.0);
 
@@ -150,7 +151,7 @@ public class Config {
         config.addDefault("Abilities.Spirits.LightSpirit.Alleviate.ParticleColor.Green", 255);
         config.addDefault("Abilities.Spirits.LightSpirit.Alleviate.ParticleColor.Blue", 255);
 
-        /*config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Enabled", false);
+        config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Enabled", false);
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Cooldown", 0);
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Controllable", false);
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.Damage", 2);
@@ -161,7 +162,7 @@ public class Config {
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.FirstBlastSpeed", 1);
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.SecondBlastSpeed", 0.2);
         config.addDefault("Abilities.Spirits.LightSpirit.LightBlast.BlastRadius", 2);
-*/
+
         config.addDefault("Abilities.Spirits.LightSpirit.Orb.Enabled", true);
         config.addDefault("Abilities.Spirits.LightSpirit.Orb.Cooldown", 10000);
         config.addDefault("Abilities.Spirits.LightSpirit.Orb.ChargeTime", 2000);
@@ -252,7 +253,7 @@ public class Config {
         config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Vanish.ApplyCooldown", true);
         config.addDefault("Abilities.Spirits.Neutral.Combo.Phase.Vanish.CooldownMultiplier", 4);
 
-       /* config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Enabled", false);
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Enabled", false);
         config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Cooldown", 0);
         config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Controllable", false);
         config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.Damage", 4);
@@ -262,7 +263,7 @@ public class Config {
         config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.PotionPower", 1);
         config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.FirstBlastSpeed", 1);
         config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.SecondBlastSpeed", 0.2);
-        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.BlastRadius", 2);*/
+        config.addDefault("Abilities.Spirits.DarkSpirit.DarkBlast.BlastRadius", 2);
 
         config.addDefault("Abilities.Spirits.DarkSpirit.Combo.Infest.Enabled", true);
         config.addDefault("Abilities.Spirits.DarkSpirit.Combo.Infest.Cooldown", 15000);

@@ -247,9 +247,4 @@ public class DarkBlast extends DarkAbility {
     public Location getLocation() {
         return blast != null ? blast : player.getLocation();
     }
-
-    @Override
-    public boolean isHiddenAbility() {
-        return true;
-    }
 }
