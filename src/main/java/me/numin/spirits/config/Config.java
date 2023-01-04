@@ -46,6 +46,8 @@ public class Config {
         config.addDefault("Language.Abilities.Spirit.Possess.Possessed", "&9** Possessed **");
         config.addDefault("Language.Abilities.Spirit.Possess.PossessionEnd", "&9** Possession Ended **");
         config.addDefault("Language.Abilities.Spirit.Possess.PossessionBreak", "&9** Broken Possession **");
+        config.addDefault("Language.Abilities.Spirit.Possess.Durability", "&9Durability: {durability}");
+        config.addDefault("Language.Abilities.Spirit.Possess.DurabilityChar", "\u2B1B");
         language.addDefault("Abilities.Spirit.Possess.DeathMessage", "{victim} succumbed to {attacker}'s {ability}");
         language.addDefault("Abilities.Spirit.PossessRecoil.DeathMessage", "{victim} failed to possess {attacker}");
 
@@ -120,8 +122,8 @@ public class Config {
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.Radius", 0.3D);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.CanRedirect", true);
         config.addDefault("Abilities.Spirits.Neutral.SpiritBlast.CanAlwaysRedirect", false);
-        config.addDefault("Abilities.Spirits.Neutral.SpiritualBody.Enabled", true);
-        config.addDefault("Abilities.Spirits.Neutral.SpiritualBody.FallDamageModifier", 0.0);
+        config.addDefault("Abilities.Spirits.Neutral.Passive.SpiritualBody.Enabled", true);
+        config.addDefault("Abilities.Spirits.Neutral.Passive.SpiritualBody.FallDamageModifier", 0.0);
 
         config.addDefault("Abilities.Spirits.Neutral.Vanish.Enabled", true);
         config.addDefault("Abilities.Spirits.Neutral.Vanish.Cooldown", 7000);

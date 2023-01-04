@@ -13,15 +13,19 @@ import com.projectkorra.projectkorra.region.RegionProtection;
 import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.ChatUtil;
 import com.projectkorra.projectkorra.util.Cooldown;
+import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.utilities.PossessRecoil;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -46,6 +50,7 @@ public class Possess extends SpiritAbility {
     }
 
     private static Map<UUID, Possess> VICTIMS = new HashMap<>();
+    private static Map<Entity, Possess> ENTITY_VICTIMS = new HashMap<>();
 
     private double minDamage;
     @Attribute("SelfDamage")
@@ -84,6 +89,8 @@ public class Possess extends SpiritAbility {
     private String possessString;
     private String possessEnd;
     private String possessBreak;
+    private String durabilityString;
+    private String durabilityChar;
 
     public Possess(Player player) {
         super(player);
@@ -109,6 +116,8 @@ public class Possess extends SpiritAbility {
         this.possessString = ChatUtil.color(Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.Possessed"));
         this.possessEnd = ChatUtil.color(Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.PossessionEnd"));
         this.possessBreak = ChatUtil.color(Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.PossessionBreak"));
+        this.durabilityString = ChatUtil.color(Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.Durability"));
+        this.durabilityChar = ChatUtil.color(Spirits.plugin.getConfig().getString("Language.Abilities.Spirit.Possess.DurabilityChar"));
         this.wasFlying = player.isFlying();
     }
 
@@ -189,7 +198,8 @@ public class Possess extends SpiritAbility {
      * Called every tick when the target has successfully been possessed.
      */
     private void possessionTick() {
-        if (target.getWorld() != player.getWorld()) {
+        if (target.getWorld() != player.getWorld()
+                || (target instanceof Player && ((Player) target).getGameMode() == GameMode.SPECTATOR)) {
             remove();
             return;
         }
@@ -199,7 +209,8 @@ public class Possess extends SpiritAbility {
         double yy = target.getHeight() / 2D;
         double xx = (target.getWidth() * 1.2) / 2D;
 
-        target.getWorld().spawnParticle(Particle.SPELL_WITCH, target.getLocation().add(0, yy, 0), 2, xx, yy, xx);
+        target.getWorld().spawnParticle(Particle.SPELL_WITCH, target.getLocation().add(0, yy, 0), 1, xx, yy, xx, 0);
+        Methods.playSpiritParticles(player, target.getLocation().add(0, yy, 0), xx, yy, xx, 0, 1);
 
         if (getRunningTicks() % 5 == 0) {
             player.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_EVOKER_CAST_SPELL, this.volume, this.pitch);
@@ -212,9 +223,50 @@ public class Possess extends SpiritAbility {
 
         if (System.currentTimeMillis() > possessStartTime + duration) {
             this.finalBlow();
+            return;
+        }
+
+        ActionBar.sendActionBar(getDurabilityString(), player);
+
+        if (!(target instanceof Player) && target instanceof Monster) {
+            if (target instanceof Creeper) {
+                ((Creeper) target).ignite();
+                return;
+            }
+
+            int hp = (int) target.getMaxHealth() + 1;
+
+            for (int i = 0; i < hp; i++) {
+                if (Math.random() < 0.004) {
+                    breakDurability();
+                    break;
+                }
+            }
         }
     }
 
+    public String getDurabilityString() {
+        double percentage = 1 - ((double) breakingDurability) / ((double) durability);
+        double bigPercentage = percentage * 100;
+        ChatColor color = ChatColor.DARK_RED;
+        if (bigPercentage >= 90) color = ChatColor.DARK_GREEN;
+        else if (bigPercentage >= 60) color = ChatColor.GREEN;
+        else if (bigPercentage >= 40) color = ChatColor.YELLOW;
+        else if (bigPercentage > 25) color = ChatColor.GOLD;
+        else if (bigPercentage > 5) color = ChatColor.RED; //5% or lower will be dark red since that is the default
+
+        String completed = "";
+        for (int i = 1; i <= durability; i++) {
+            if (i <= breakingDurability) {
+                completed =  ChatColor.GRAY + durabilityChar + completed;
+            } else {
+                completed = color + durabilityChar + completed;
+            }
+        }
+
+        return durabilityString.replace("{durability}", completed);
+    }
+    
     /**
      * Possess the target
      * @param entity The target to possess
@@ -233,6 +285,12 @@ public class Possess extends SpiritAbility {
             }
             VICTIMS.put(target.getUniqueId(), this);
             ActionBar.sendActionBar(this.possessString, (Player) target);
+        } else {
+            if (ENTITY_VICTIMS.containsKey(target)) { //From another player
+                Possess other = ENTITY_VICTIMS.get(target);
+                other.remove(); //Force them out, damage the player
+            }
+            ENTITY_VICTIMS.put(target, this);
         }
     }
 
@@ -330,6 +388,7 @@ public class Possess extends SpiritAbility {
         player.setFlying(wasFlying);
         player.setFlySpeed(currentFlySpeed);
         player.setNoDamageTicks(0);
+        player.setSneaking(false);
 
         if (this.armorStand != null && !this.armorStand.isDead()) this.armorStand.remove();
 
@@ -366,6 +425,8 @@ public class Possess extends SpiritAbility {
         if (target instanceof Player) {
             VICTIMS.remove(target.getUniqueId());
             ActionBar.sendActionBar(possessEnd, (Player) target);
+        } else {
+            ENTITY_VICTIMS.remove(target);
         }
 
         super.remove();
@@ -409,6 +470,10 @@ public class Possess extends SpiritAbility {
         }
 
         return true;
+    }
+
+    public static Possess getPossessed(Entity entity) {
+        return ENTITY_VICTIMS.get(entity);
     }
 
     @Override
