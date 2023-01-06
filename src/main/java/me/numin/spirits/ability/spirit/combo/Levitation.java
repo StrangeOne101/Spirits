@@ -27,7 +27,7 @@ public class Levitation extends SpiritAbility implements ComboAbility {
     private boolean doLevitationMultiplier;
     @Attribute("EnablePhaseMultiplier")
     private boolean doPhaseMultiplier;
-    private boolean wasFlying;
+    private boolean wasFlying, canFly;
     private double allowedHealthLoss, initialHealth;
     @Attribute("AgilityMultiplier")
     private double agilityMultiplier;
@@ -60,12 +60,13 @@ public class Levitation extends SpiritAbility implements ComboAbility {
         this.allowedHealthLoss = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Combo.Levitation.AllowedHealthLoss");
         this.doAgilityMultiplier = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Agility.Enabled");
         this.agilityMultiplier = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Agility.Multiplier");
-        this.doPhaseMultiplier = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Phase.Enabled");
+        this.doPhaseMultiplier = false; //Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Phase.Enabled");
         this.phaseMultiplier = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Phase.Multiplier");
         this.doLevitationMultiplier = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Levitation.Enabled");
         this.levitationMultiplier = Spirits.plugin.getConfig().getDouble("Abilities.Spirits.Neutral.Combo.Levitation.AbilityCooldownMultipliers.Levitation.Multiplier");
 
         this.wasFlying = player.isFlying();
+        this.canFly = player.getAllowFlight();
         this.origin = player.getLocation();
         this.initialHealth = player.getHealth();
     }
@@ -79,6 +80,7 @@ public class Levitation extends SpiritAbility implements ComboAbility {
             remove();
             return;
         }
+        player.setAllowFlight(true);
         player.setFlying(true);
         this.playParticles();
     }
@@ -92,7 +94,7 @@ public class Levitation extends SpiritAbility implements ComboAbility {
     @Override
     public void remove() {
         player.setFlying(wasFlying);
-
+        player.setAllowFlight(canFly);
         long duration = System.currentTimeMillis() - getStartTime();
         if (doAgilityMultiplier) {
             long agilityCooldown = (long) (duration * agilityMultiplier);

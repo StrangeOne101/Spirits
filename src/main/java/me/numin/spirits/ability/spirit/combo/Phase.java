@@ -56,7 +56,7 @@ public class Phase extends SpiritAbility implements ComboAbility {
         this.applyVanishCD = Spirits.plugin.getConfig().getBoolean("Abilities.Spirits.Neutral.Combo.Phase.Vanish.ApplyCooldown");
         this.vanishMultiplier = Spirits.plugin.getConfig().getLong("Abilities.Spirits.Neutral.Combo.Phase.Vanish.CooldownMultiplier");
 
-        applyLevitationCD = bPlayer.getAbilities().values().contains("Levitation");
+        applyLevitationCD = false; //Temp because of a PK bug
         levitationMultiplier = 4;
 
         this.origin = player.getLocation();
