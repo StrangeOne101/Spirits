@@ -28,7 +28,7 @@ public class Levitation extends SpiritAbility implements ComboAbility {
     @Attribute("EnablePhaseMultiplier")
     private boolean doPhaseMultiplier;
     private boolean wasFlying, canFly;
-    private double allowedHealthLoss, initialHealth;
+    private double allowedHealthLoss, initialHealth, oldFlyspeed;
     @Attribute("AgilityMultiplier")
     private double agilityMultiplier;
     @Attribute("LevitationMultiplier")
@@ -69,6 +69,7 @@ public class Levitation extends SpiritAbility implements ComboAbility {
         this.canFly = player.getAllowFlight();
         this.origin = player.getLocation();
         this.initialHealth = player.getHealth();
+        this.oldFlyspeed = player.getFlySpeed();
     }
 
     @Override
@@ -82,6 +83,7 @@ public class Levitation extends SpiritAbility implements ComboAbility {
         }
         player.setAllowFlight(true);
         player.setFlying(true);
+        player.setFlySpeed(0.1F);
         this.playParticles();
     }
 
@@ -95,6 +97,7 @@ public class Levitation extends SpiritAbility implements ComboAbility {
     public void remove() {
         player.setFlying(wasFlying);
         player.setAllowFlight(canFly);
+        player.setFlySpeed((float) oldFlyspeed);
         long duration = System.currentTimeMillis() - getStartTime();
         if (doAgilityMultiplier) {
             long agilityCooldown = (long) (duration * agilityMultiplier);
