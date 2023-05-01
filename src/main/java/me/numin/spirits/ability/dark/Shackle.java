@@ -1,7 +1,10 @@
 package me.numin.spirits.ability.dark;
 
 import com.projectkorra.projectkorra.GeneralMethods;
+import com.projectkorra.projectkorra.Manager;
+import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.attribute.Attribute;
+import com.projectkorra.projectkorra.util.FlightHandler;
 import me.numin.spirits.Spirits;
 import me.numin.spirits.utilities.Methods;
 import me.numin.spirits.ability.api.DarkAbility;
@@ -106,7 +109,7 @@ public class Shackle extends DarkAbility {
 
                 if (this.target instanceof Player) {
                     Player playerTarget = (Player)this.target;
-                    playerTarget.setWalkSpeed(0);
+                    playerTarget.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 5));
                     playerTarget.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 120, 128));
                 } else {
                     LivingEntity livingTarget = (LivingEntity)this.target;
